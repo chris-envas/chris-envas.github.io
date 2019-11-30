@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="快速搭建LAMP环境,小白进击Linux类似 LAMP 等的 Linux 经典服务器部署，可以查找这2家VPS供应商的参考文档。 https://www.digitalocean.com/、 https://www.linode.com">
+<meta name="keywords" content="node.js linux javascript java css http ssr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu-LAMP搭建">
+<meta property="og:url" content="http://yoursite.com/2018/12/03/Ubuntu-LAMP搭建/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="快速搭建LAMP环境,小白进击Linux类似 LAMP 等的 Linux 经典服务器部署，可以查找这2家VPS供应商的参考文档。 https://www.digitalocean.com/、 https://www.linode.com">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-26T14:13:43.553Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu-LAMP搭建">
+<meta name="twitter:description" content="快速搭建LAMP环境,小白进击Linux类似 LAMP 等的 Linux 经典服务器部署，可以查找这2家VPS供应商的参考文档。 https://www.digitalocean.com/、 https://www.linode.com">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/03/Ubuntu-LAMP搭建/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Ubuntu-LAMP搭建 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/03/Ubuntu-LAMP搭建/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="你只有拼尽全力，才能看起来毫不费力">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu-LAMP搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-03 10:51:16" itemprop="dateCreated datePublished" datetime="2018-12-03T10:51:16+08:00">2018-12-03</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-26 22:13:43" itemprop="dateModified" datetime="2019-07-26T22:13:43+08:00">2019-07-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/服务器/" itemprop="url" rel="index"><span itemprop="name">服务器</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>快速搭建LAMP环境,小白进击Linux<br>类似 LAMP 等的 Linux 经典服务器部署，可以查找这2家VPS供应商的参考文档。<br> <a href="https://www.digitalocean.com/、" target="_blank" rel="noopener">https://www.digitalocean.com/、</a> <a href="https://www.linode.com" target="_blank" rel="noopener">https://www.linode.com</a></p>
+<a id="more"></a>
+<ul>
+<li><p>为了少打sudo，加快部署，直接sudo su</p>
+</li>
+<li><p>更新系统软件源，的软件包（二进制包）列表.<br><code>apt update</code></p>
+</li>
+<li><p>安装Apache<br><code>apt install apache2</code></p>
+</li>
+<li><p>开启 Apache2 的 KeepAlive<br><code>vi /etc/apache2/apache2.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">KeepAlive On</span><br><span class="line">MaxKeepAliveRequests 50</span><br><span class="line">KeepAliveTimeout 5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Mysql<br><code>apt install mysql-server</code><br>安装过程中会提示你输入root密码<br>如果不幸MySQL的root密码忘记了，谷歌搜索：mysql_secure_installation 相关的文章，会教你怎样重置 root密码</p>
+</li>
+<li><p>安装PHP7<br><code>apt install php libapache2-mod-php php-mysql</code></p>
+</li>
+<li><p>全局 加入 index.php 为默认索引文件（不需要全局的话，可以忽略这部，后面在 vhost的网站配置里改）<br><code>vi /etc/apache2/mods-enabled/dir.conf</code><br>索引类型增加 index.php ，注意插入位置，关系到优先级（同目录下，这些名字的文件的优先级别）</p>
+</li>
+<li><p>重启Apache2 ( PHP 是Apache2 的模块，所以PHP 配置修改了，也必须执行重启Apache2)<br><code>systemctl restart apache2</code></p>
+</li>
+<li><p>查询可更新的 其他 php模块<br><code>apt search php7.0-</code></p>
+</li>
+</ul>
+<p>#############</p>
+<ul>
+<li>这个时候，LAMP已经装好了，我们的环境如下<br>Default host www-root: /var/www/html/<br>apache2环境的php配置文件: /etc/php/7.0/apache2/php.ini<br>命令行下起作用的php配置文件: /etc/php/7.0/cli/php.ini</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Apache2 的配置目录下有这么多东西</span><br><span class="line"># ls /etc/apache2/</span><br><span class="line">apache2.conf    conf-enabled  magic           mods-enabled  sites-available</span><br><span class="line">conf-available  envvars       mods-available  ports.conf    sites-enabled</span><br></pre></td></tr></table></figure>
+<p>我们主要操作 <em>-available/ 目录下的 </em>.conf<br>然后再用 <code>a2enconf  a2enmod   a2ensite</code> 这3个工具启用你配置的 <em>.conf<br>然后再用 <code>a2disconf  a2dismod   a2dissite</code> 这3个工具禁用你配置的 </em>.conf</p>
+<ul>
+<li><p>/etc/apache2/mods-available/<br>先说 mod （模块）， 大部分 Apache2 的动态库都是装了的，这些都是功能模块，但是 为了安全、轻量 等原因，这些模块是没有启用的</p>
+</li>
+<li><p>/etc/apache2/conf-available/<br>全局的HTTP 协议的一些参数，另外一些全局参数，是在上面的 mods 里管理的</p>
+</li>
+<li><p>/etc/apache2/sites-enabled<br>上面两个东西其实需要的机会不多，最经常操作的还是 vhost （sites）<br>/etc/apache2/sites-available/{000-default.conf,default-ssl.conf}<br>分别是 80(http://) 和 443(https://) 2个 默认端口服务的 默认网站设置，<br>  默认网站就是：<br>  ​    当你的客户端请求头文件，没有指定 Host: xx.com 来访问这个服务器的时候，或者是，Host: xx.com 在Apache的sites里根本不存在，就会使用这个默认网站的内容，返回给用户请求<br>  ​    当你直接用 IP 打开的时候，也是访问这个默认网站</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端测试 默认网站，gitbash运行:</span><br><span class="line">$ curl -L &quot;http://192.168.28.164&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_ssl.c&gt;</span><br><span class="line">        &lt;VirtualHost _default_:443&gt;</span><br><span class="line"># 配置文件支持一些简单的逻辑判断，比如 IfModule，当启用ssl模块后这个配置块有效（a2enmod ssl）</span><br><span class="line">		....</span><br><span class="line">		&lt;/VirtualHost _default_&gt;</span><br><span class="line">&lt;/IfModule mod_ssl.c&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建一个 xx.com 的 vhost<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/apache2/sites-available/xx.com.conf</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">        ServerName xx.com</span><br><span class="line">        ServerAlias www.xx.com</span><br><span class="line"></span><br><span class="line">        ServerAdmin webmaster@xx.com</span><br><span class="line">        DocumentRoot /var/www/xx.com</span><br><span class="line"></span><br><span class="line">        ErrorLog $&#123;APACHE_LOG_DIR&#125;/error.log</span><br><span class="line">        CustomLog $&#123;APACHE_LOG_DIR&#125;/access.log combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><code>a2ensite xx.com; systemctl reload apache2</code><br>mkdir -p /var/www/xx.com<br>chown -R www-data:www-data /var/www/xx.com    # php 要读写web目录的时候，需要如此给予权限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">客户端测试 vhost，gitbash运行:</span><br><span class="line">$ curl -H &quot;Host: xx.com&quot; -L &quot;http://192.168.28.164&quot;</span><br><span class="line">$ curl -H &quot;Host: www.xx.com&quot; -L &quot;http://192.168.28.164&quot;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>第二个vhost 测试<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/apache2/sites-available/bbs.xx.com.conf</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">        ServerName bbs.xx.com</span><br><span class="line"></span><br><span class="line">        ServerAdmin webmaster@xx.com</span><br><span class="line">        DocumentRoot /var/www/bbs.xx.com</span><br><span class="line"></span><br><span class="line">        ErrorLog $&#123;APACHE_LOG_DIR&#125;/error.log</span><br><span class="line">        CustomLog $&#123;APACHE_LOG_DIR&#125;/access.log combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>mkdir -p /var/www/bbs.xx.com<br>chown -R www-data:www-data /var/www/bbs.xx.com<br><code>a2ensite bbs.xx.com; systemctl reload apache2</code></p>
+<p>a2ensite bbs.xx.com    # 启用这个网站配置<br>a2dissite bbs.xx.com    # 禁用这个网站配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端测试 vhost，gitbash运行:</span><br><span class="line">$ curl -H &quot;Host: bbs.xx.com&quot; -L &quot;http://192.168.28.164&quot;</span><br></pre></td></tr></table></figure></p>
+<h1 id="PHP-部分"><a href="#PHP-部分" class="headerlink" title="PHP 部分"></a>PHP 部分</h1><ul>
+<li><p>phpinfo 查看PHP信息<br><code>vi /var/www/html/info.php</code></p>
+</li>
+<li><p>其他的东西网上自己看</p>
+</li>
+<li><p>安装个 PMA (phpMyAdmin)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /var/www/html/</span><br><span class="line">wget https://files.phpmyadmin.net/phpMyAdmin/4.8.3/phpMyAdmin-4.8.3-all-languages.zip</span><br><span class="line">which unzip || apt -y install unzip</span><br><span class="line">unzip phpMyAdmin-4.8.3-all-languages.zip</span><br><span class="line">mv phpMyAdmin-4.8.3-all-languages pma</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>浏览器访问 <a href="http://192.168.28.164/pma/" target="_blank" rel="noopener">http://192.168.28.164/pma/</a><br>root 和 root密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">安装缺失的模块</span><br><span class="line">apt search php7.0- | grep mbstring</span><br><span class="line">	-&gt; apt-get install php7.0-mbstring</span><br><span class="line">systemctl restart apache2</span><br><span class="line">再刷新，就没有mbstring报错</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>权限问题<br>chown -R www-data:www-data /var/www/html/pma</li>
+</ul>
+<ul>
+<li><p>MySQL 添加数据库 和用户<br>您已添加了一个新用户。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &apos;wp-498&apos;@&apos;localhost&apos; IDENTIFIED WITH mysql_native_password AS &apos;***&apos;;GRANT ALL PRIVILEGES ON *.* TO &apos;wp-498&apos;@&apos;localhost&apos; REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;GRANT ALL PRIVILEGES ON `wp-498`.* TO &apos;wp-498&apos;@&apos;localhost&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装WordPress</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd /var/www/bbs.xx.com/</span><br><span class="line">wget https://wordpress.org/latest.zip</span><br><span class="line">unzip latest.zip</span><br><span class="line">ls</span><br><span class="line">mv wordpress/* .</span><br><span class="line">rm -rf latest.zip  wordpress</span><br><span class="line">chown -R www-data:www-data /var/www/bbs.xx.com</span><br><span class="line"></span><br><span class="line"># 打开浏览器，前去安装</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/27/Vue深入浅出系列一/" rel="next" title="Vue深入浅出系列一">
+                <i class="fa fa-chevron-left"></i> Vue深入浅出系列一
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/08/关于this的指向/" rel="prev" title="关于this的指向">
+                关于this的指向 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">你只有拼尽全力，才能看起来毫不费力</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP-部分"><span class="nav-number">1.</span> <span class="nav-text">PHP 部分</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

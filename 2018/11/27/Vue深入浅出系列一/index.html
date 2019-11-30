@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Vue 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动">
+<meta name="keywords" content="node.js linux javascript java css http ssr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue深入浅出系列一">
+<meta property="og:url" content="http://yoursite.com/2018/11/27/Vue深入浅出系列一/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="Vue 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-26T14:14:11.622Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue深入浅出系列一">
+<meta name="twitter:description" content="Vue 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/27/Vue深入浅出系列一/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Vue深入浅出系列一 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/27/Vue深入浅出系列一/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="你只有拼尽全力，才能看起来毫不费力">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vue深入浅出系列一
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-27 16:12:43" itemprop="dateCreated datePublished" datetime="2018-11-27T16:12:43+08:00">2018-11-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-26 22:14:11" itemprop="dateModified" datetime="2019-07-26T22:14:11+08:00">2019-07-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Vue 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动</p>
+<a id="more"></a>
+<h3 id="Vue实例"><a href="#Vue实例" class="headerlink" title="Vue实例"></a>Vue实例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    el:<span class="string">"#root"</span>,</span><br><span class="line">    template:<span class="string">"&lt;div&gt;start&lt;/div&gt;"</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>el</code>用于挂载Vue实例到对应的DOM上，除此之外我们还可以用另一种方法挂载</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    template:<span class="string">"&lt;div&gt;start&lt;/div&gt;"</span></span><br><span class="line">&#125;)</span><br><span class="line">app.$mount(<span class="string">"#root"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="关于根实例"><a href="#关于根实例" class="headerlink" title="关于根实例"></a>关于根实例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    data: &#123;</span><br><span class="line">        text: <span class="string">''</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>以下，都将以app描述Vue实例对象</p>
+<p>通过<code>app.*</code>的方式，可以获取相关的属性值如 <code>app.text</code></p>
+<p>使用<code>app.$data</code>可以获得一个包含了我们设置在<code>data</code>内数据的对象，由此可知<code>app.text</code>=<code>app.$data.text</code></p>
+<p><code>app.$options</code>-包含了Vue实例以及默认参数的合并对象</p>
+<p><em>特别说明的是，<code>app.$options.data.text</code>无法直接修改值,说明传入的<code>data</code>并非如<code>app.$data</code>一样,说明Vue内部是做了处理的</em></p>
+<p>那么是否<code>app.$options</code>是无法修改赋值的?答案是否定的</p>
+<p><code>app.#options.render</code>的修改是有效的</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.$options.render = <span class="function">(<span class="params">h</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> h(<span class="string">'div'</span>,&#123;&#125;,<span class="string">'new render function'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <em><code>render</code>函数是用于渲染模板的函数，当我们对其进行修改后，渲染的页面也将受到影响</em></p>
+<p> <code>app.$root</code>-根实例对象</p>
+<p> 即是 app = app.$root</p>
+<p> 在任意的组件中都可以凭借<code>app.$root</code>访问根实例</p>
+<p> <code>app.$children</code>-获取组件内的内嵌标签</p>
+<p> 后续在组件部分对其进行相关了解</p>
+<p> <code>app.$slots</code>,<code>app.$scopedSlots</code>-插槽概念(非常有用)</p>
+<p> 后续将用于template的相关使用</p>
+<p> <code>app.$refs</code> -定位相关标签</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> <code>app.$refs.box</code>即可获取其DOM结构标签，如果是在某个组件内使用，那么返回的将是该Vue实例对象</p>
+<p> <code>app.$isServer</code>-判断是否服务端渲染</p>
+<h3 id="基础API"><a href="#基础API" class="headerlink" title="基础API"></a>基础API</h3><h4 id="app-watch"><a href="#app-watch" class="headerlink" title="app.$watch"></a>app.$watch</h4><p> <code>app.$watch</code> - 监听数据变化</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">app.$watch(<span class="string">'text'</span>,(newText,oldText) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;newText&#125;</span>:<span class="subst">$&#123;oldText&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//组件实例内写法</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    watch: &#123;</span><br><span class="line">       text: (newText,oldText) &#123;</span><br><span class="line">  	       <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;newText&#125;</span>:<span class="subst">$&#123;oldText&#125;</span>`</span>)</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p> 实际上我们在路由跳转时，有时需要销毁掉watch，这时我们应该这样书写代码</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unWatch = app.$watch(<span class="string">'text'</span>,	      (newText,oldText) =&gt; &#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;newText&#125;</span>:<span class="subst">$&#123;oldText&#125;</span>`</span>)</span><br><span class="line"> &#125;)</span><br><span class="line"> </span><br><span class="line"> unWatch() <span class="comment">//销毁</span></span><br></pre></td></tr></table></figure>
+<h4 id="app-on、app-emit、app-once"><a href="#app-on、app-emit、app-once" class="headerlink" title="app.$on、app.$emit、app.$once"></a>app.$on、app.$emit、app.$once</h4><p> <code>app.$on</code> - 绑定事件</p>
+<p> <code>app.$emit</code> - 触发事件</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.$on(<span class="string">'test'</span>,(a,b) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`事件被触发后收到的值<span class="subst">$&#123;a&#125;</span>,<span class="subst">$&#123;b&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br><span class="line">app.$emit(<span class="string">'test'</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p> <code>app.$once</code> - 绑定事件，但只能触发一次</p>
+<h4 id="app-forceUpdate、app-set、app-delete"><a href="#app-forceUpdate、app-set、app-delete" class="headerlink" title="app.$forceUpdate、app.$set、app.$delete"></a>app.$forceUpdate、app.$set、app.$delete</h4><p> Vue是响应式的框架，但在以下这种情况下，无法正常响应</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    template: <span class="string">'&lt;div&gt;&#123;&#123;obj.a&#125;&#125;&lt;/div&gt;'</span>,</span><br><span class="line">    data: &#123;</span><br><span class="line">        obj: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p> <code>obj</code>是一个空对象但未曾声明a，在template中调用时，将不能正常响应数据，此时借助<code>app.$forceUpdate</code>来使其响应数据的变化,但是这种方式并不推荐</p>
+<p> 推荐使用<code>app.$set</code></p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//动态的补上obj.a属性，data对a的指赋值</span></span><br><span class="line">app.$set(app.obj,<span class="string">'a'</span>,data)</span><br></pre></td></tr></table></figure>
+<p> <code>app.$delete</code>则可以删除设置的属性</p>
+<h4 id="app-nextTick"><a href="#app-nextTick" class="headerlink" title="app.$nextTick"></a>app.$nextTick</h4><p> Vue是异步渲染DOM节点的，假设一种情况，异步队列特别多时，DOM往往无法返回每次的变化，只能返回每段时间的变化，而我们如果需要细粒度的控制DOM的每次变化，可以使用</p>
+<p> <code>app.$nextTick</code></p>
+<p> 参考官网的实例：</p>
+<p> <a href="https://cn.vuejs.org/v2/api/#vm-nextTick" target="_blank" rel="noopener">https://cn.vuejs.org/v2/api/#vm-nextTick</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/27/webpack/" rel="next" title="Webpack配置">
+                <i class="fa fa-chevron-left"></i> Webpack配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/03/Ubuntu-LAMP搭建/" rel="prev" title="Ubuntu-LAMP搭建">
+                Ubuntu-LAMP搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">你只有拼尽全力，才能看起来毫不费力</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue实例"><span class="nav-number">1.</span> <span class="nav-text">Vue实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于根实例"><span class="nav-number">2.</span> <span class="nav-text">关于根实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础API"><span class="nav-number">3.</span> <span class="nav-text">基础API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#app-watch"><span class="nav-number">3.1.</span> <span class="nav-text">app.$watch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#app-on、app-emit、app-once"><span class="nav-number">3.2.</span> <span class="nav-text">app.$on、app.$emit、app.$once</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#app-forceUpdate、app-set、app-delete"><span class="nav-number">3.3.</span> <span class="nav-text">app.$forceUpdate、app.$set、app.$delete</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#app-nextTick"><span class="nav-number">3.4.</span> <span class="nav-text">app.$nextTick</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

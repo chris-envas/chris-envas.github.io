@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文记录了Express+Mongodb+Swig的一些实战用法，利用Node.js快速构建CRUD应用颇有益处，熟悉后端的常规操作，融汇贯通">
+<meta name="keywords" content="node.js linux javascript java css http ssr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express实战">
+<meta property="og:url" content="http://yoursite.com/2019/02/11/Express实战/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="本文记录了Express+Mongodb+Swig的一些实战用法，利用Node.js快速构建CRUD应用颇有益处，熟悉后端的常规操作，融汇贯通">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-26T14:12:44.681Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Express实战">
+<meta name="twitter:description" content="本文记录了Express+Mongodb+Swig的一些实战用法，利用Node.js快速构建CRUD应用颇有益处，熟悉后端的常规操作，融汇贯通">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/11/Express实战/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Express实战 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/11/Express实战/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="你只有拼尽全力，才能看起来毫不费力">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Express实战
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-11 20:03:33" itemprop="dateCreated datePublished" datetime="2019-02-11T20:03:33+08:00">2019-02-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-26 22:12:44" itemprop="dateModified" datetime="2019-07-26T22:12:44+08:00">2019-07-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文记录了Express+Mongodb+Swig的一些实战用法，利用Node.js快速构建CRUD应用颇有益处，熟悉后端的常规操作，融汇贯通</p>
+<a id="more"></a>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>创建入口文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//app.js</span></span><br><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> app = express()</span><br></pre></td></tr></table></figure>
+<p>依赖项</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"dependencies"</span>: &#123;</span><br><span class="line">   <span class="string">"body-parser"</span>: <span class="string">"1.15.2"</span>,</span><br><span class="line">   <span class="string">"cookies"</span>: <span class="string">"^0.7.1"</span>,</span><br><span class="line">   <span class="string">"express"</span>: <span class="string">"^4.16.4"</span>,</span><br><span class="line">   <span class="string">"markdown"</span>: <span class="string">"^0.5.0"</span>,</span><br><span class="line">   <span class="string">"mongoose"</span>: <span class="string">"5.4.8"</span>,</span><br><span class="line">   <span class="string">"multer"</span>: <span class="string">"^1.4.1"</span>,</span><br><span class="line">   <span class="string">"string-random"</span>: <span class="string">"^0.1.3"</span>,</span><br><span class="line">   <span class="string">"swig"</span>: <span class="string">"^1.4.2"</span></span><br><span class="line"> &#125;,</span><br></pre></td></tr></table></figure>
+<h4 id="路由绑定"><a href="#路由绑定" class="headerlink" title="路由绑定"></a>路由绑定</h4><p>使用<code>app.get()</code>,<code>app.post()</code>对访问具体请求方式的路由进行绑定，内置三个参数，分别为<code>req</code>，<code>res</code>,<code>next</code>,分别对<code>request</code>对象，<code>response</code>对象和下一个执行函数<code>next</code></p>
+<h4 id="解析请求方法"><a href="#解析请求方法" class="headerlink" title="解析请求方法"></a>解析请求方法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bodyParser = <span class="built_in">require</span>(<span class="string">'body-parser'</span>) <span class="comment">//调用该中间件</span></span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>:<span class="literal">true</span>&#125;)) <span class="comment">//使用</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>之后在<code>req.body</code>便可以获取客户端传递的请求数据，后文路由部分将具体应用到</p>
+<p>body-parser具体使用传送门：<a href="https://github.com/expressjs/body-parser" target="_blank" rel="noopener">https://github.com/expressjs/body-parser</a></p>
+</blockquote>
+<h3 id="模板引擎"><a href="#模板引擎" class="headerlink" title="模板引擎"></a>模板引擎</h3><h4 id="指定模板引擎-swig"><a href="#指定模板引擎-swig" class="headerlink" title="指定模板引擎-swig"></a>指定模板引擎-swig</h4><p><code>app.engine</code>定义当前模板引擎 第一个参数表示 模板引擎的文件后缀， 第二个参数表示对文件的解析模板内容的方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.engine(<span class="string">'html'</span>, swig.renderFile);</span><br></pre></td></tr></table></figure>
+<h4 id="设置模板文件存放的目录"><a href="#设置模板文件存放的目录" class="headerlink" title="设置模板文件存放的目录"></a>设置模板文件存放的目录</h4><p>第一个参数必须是<code>views</code>,第二个参数这是模板文件存放的目录 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'./views'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="注册模板引擎"><a href="#注册模板引擎" class="headerlink" title="注册模板引擎"></a>注册模板引擎</h4><p>第一个参数必须是<code>views engine</code>, 第二个参数则是<code>app.engine</code>定义的模板引擎名称（即第一个参数）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.set(<span class="string">'views engine'</span>, <span class="string">'html'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="读取模板引擎文件"><a href="#读取模板引擎文件" class="headerlink" title="读取模板引擎文件"></a>读取模板引擎文件</h4><p>设置对应的模板引擎后，可使用<code>res.render</code>读取相关模板文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.render(<span class="string">'./main/index'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>res.render(texturl, [options])</code>接收两个参数，参数1为相关模板的路径位置，参数2为传递的模板数据（可选）</p>
+<h4 id="取消模板缓存"><a href="#取消模板缓存" class="headerlink" title="取消模板缓存"></a>取消模板缓存</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swig.setDefaults(&#123;<span class="attr">cache</span>: <span class="literal">false</span>&#125;) <span class="comment">//用于开发调试</span></span><br></pre></td></tr></table></figure>
+<h4 id="模板的继承"><a href="#模板的继承" class="headerlink" title="模板的继承"></a>模板的继承</h4><p>使用<code>extends</code>和<code>block</code>来实现模板继承，如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//layout.html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;% block title %&#125;&#123;% endblock  %&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    &#123;% block head %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// index.html</span><br><span class="line">&#123;% extends './layout.html' %&#125;</span><br><span class="line">&#123;% block title %&#125; index &#123;% endblock %&#125;</span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello swig<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;% endblock %&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="模板的引入"><a href="#模板的引入" class="headerlink" title="模板的引入"></a>模板的引入</h4><p>使用<code>include</code>实现模板引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include <span class="string">'page.html'</span> %&#125;</span><br></pre></td></tr></table></figure>
+<p>官方文档：<a href="http://node-swig.github.io/swig-templates/docs/tags" target="_blank" rel="noopener">http://node-swig.github.io/swig-templates/docs/tags</a></p>
+<p>中文使用指南：<a href="http://www.iqianduan.net/blog/how_to_use_swig" target="_blank" rel="noopener">http://www.iqianduan.net/blog/how_to_use_swig</a></p>
+<h3 id="托管静态资源文件"><a href="#托管静态资源文件" class="headerlink" title="托管静态资源文件"></a>托管静态资源文件</h3><p><code>app.use</code>是用来注册中间件函数</p>
+<p><code>express.static</code>是一个中间件函数，用于处理返回的指定文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//当访问/public 路径时，express 自动处理指向__dirname+'/public'路径</span></span><br><span class="line">app.use(<span class="string">'/public'</span>, express.static(__dirname+<span class="string">'/public'</span>))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>划分模块</p>
+</blockquote>
+<p><code>app.use</code>也常用来划分功能模块，为不同的逻辑指定不同的处理文件，其本质原理是一样的，如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">'admin'</span>, <span class="built_in">require</span>(<span class="string">'./router/admin'</span>))</span><br><span class="line">app.use(<span class="string">'api'</span>, <span class="built_in">require</span>(<span class="string">'./router/api '</span>))</span><br><span class="line">app.use(<span class="string">'/'</span>, <span class="built_in">require</span>(<span class="string">'./router/main'</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="通过Cookies缓存登录相关状态"><a href="#通过Cookies缓存登录相关状态" class="headerlink" title="通过Cookies缓存登录相关状态"></a>通过Cookies缓存登录相关状态</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//yarn add cookies </span></span><br><span class="line"><span class="keyword">var</span> Cookies = <span class="built_in">require</span>(<span class="string">'cookie'</span>)</span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//借助中间件函数 为req对象赋予新的全局属性</span></span><br><span class="line">    req.Cookies = <span class="keyword">new</span> Cookies(req, res)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一般来说，首次登录后，后端可以主动给客户端设置Cookie，之后页面重新加载，后端通过检测Cookie来输出客户端内容，若是使用了前后端分离的开发方式，则主动权应交给客户端来做</p>
+</blockquote>
+<h3 id="数据库及相关工具安装"><a href="#数据库及相关工具安装" class="headerlink" title="数据库及相关工具安装"></a>数据库及相关工具安装</h3><h4 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h4><p>下载安装mongoDB:<a href="https://www.mongodb.com/download-center#community" target="_blank" rel="noopener">https://www.mongodb.com/download-center#community</a></p>
+<p>msi文件切勿安装GUI界面，否则将安装超久或无法安装</p>
+<p>安装完毕,进入data目录下新建db目录</p>
+<h4 id="windows下使用"><a href="#windows下使用" class="headerlink" title="windows下使用"></a>windows下使用</h4><p>1启动数据库服务，cmd下,定位到mongodb资源目录，输入以下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod --dbpath=&quot;输入你新建db目录的资源路径&quot;</span><br></pre></td></tr></table></figure>
+<p>2 使用mongodb数据可视化数据库-Robo 3T<a href="https://robomongo.org/" target="_blank" rel="noopener">https://robomongo.org/</a></p>
+<p>3 使用moogoose进行连接 先通过<code>npm i mongoose</code>或<code>yarn add mongoose</code>安装</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//app.js</span></span><br><span class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</span><br><span class="line"><span class="keyword">var</span> dbpath = <span class="string">'mongodb://localhost:27071/blog'</span> <span class="comment">//数据库地址</span></span><br><span class="line">mongoose。connect(dbpath, (err) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'fail'</span>+err)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'success'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><em>建立纲要并创建模型</em></p>
+<p>mongodb提供了<code>schema</code>使我们自定义数据类型的纲要，如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//schemas/user</span></span><br><span class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</span><br><span class="line"><span class="keyword">var</span> Schema = mongoose.schema()</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> SchemaModel = <span class="keyword">new</span> Schema(&#123;</span><br><span class="line">    username: <span class="built_in">String</span>,</span><br><span class="line">    password: <span class="built_in">String</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>建立好的纲要，在使用<code>mongoose.model</code>来生成模型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//models/user</span></span><br><span class="line"><span class="keyword">var</span> SchemalModel = mongoose.model(<span class="string">'model'</span>, SchemaModel)</span><br></pre></td></tr></table></figure>
+<p>每一个模型都将会映射到<code>mongodb</code>数据库中的集合，这些文档将包含了模型纲要<code>schema</code>中定义的字段，接着，我们便可以使用模型来创建、更新、删除记录，并进行查询等相关的数据库操作</p>
+<blockquote>
+<p>注意 如果<code>schema</code>中定义的是一个关联数据，写法稍有不同</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> SchemaModel = <span class="keyword">new</span> Schema(&#123;</span><br><span class="line">    <span class="comment">// category将要接收的是另外一个数据模型存储的一个ID数据，称之为关联数据</span></span><br><span class="line">    category: &#123;</span><br><span class="line">        <span class="comment">//类型</span></span><br><span class="line">        type: mongoose.Schema.Types.ObjectId,</span><br><span class="line">        ref: <span class="string">'Content'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="操作数据库"><a href="#操作数据库" class="headerlink" title="操作数据库"></a>操作数据库</h4><p><strong>基于mongoose.model生成的数据模型来对数据进行查询增删改查等相关操作</strong></p>
+<h5 id="增加数据"><a href="#增加数据" class="headerlink" title="增加数据"></a>增加数据</h5><p>必须通过<code>new User().save()</code>创建实例的形式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> user = <span class="keyword">new</span> User(&#123;</span><br><span class="line">    username:username</span><br><span class="line">&#125;)</span><br><span class="line">user.save() </span><br><span class="line"><span class="comment">// 且save方法本身是Promise化的，如果有新的回调函数可以通过return本身的方式，利用then执行新的异步</span></span><br></pre></td></tr></table></figure>
+<h5 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h5><p>通过<code>remove</code>查询数据库是否存在该条记录</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) <span class="comment">//引入前文生成的数据模型 实际上它是一个构造函数</span></span><br><span class="line"></span><br><span class="line">User.remove(&#123;</span><br><span class="line">    _id: id <span class="comment">//根据id去查询对应的表</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">delete</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">delete</span>) &#123;</span><br><span class="line">        <span class="comment">// 已删除</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h5 id="改变数据"><a href="#改变数据" class="headerlink" title="改变数据"></a>改变数据</h5><p>通过<code>update</code>查询数据库是否存在该条记录</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) </span><br><span class="line"></span><br><span class="line">User.update(&#123;</span><br><span class="line">    _id: id <span class="comment">//根据id去查询对应的表</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    username: username <span class="comment">//需要修改的数据</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">userInfo</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(userInfo) &#123;</span><br><span class="line">        <span class="comment">// 数据库存在该条记录</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 反之不存在</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>针对查询返回的数据对象还可以进行操作 也可以起到更新数据的作用</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User.findOne(&#123;</span><br><span class="line">      _id: contentId</span><br><span class="line"> &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">content</span>)</span>&#123;</span><br><span class="line">       content.view++</span><br><span class="line">       content.save()</span><br><span class="line">       ...</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>还有一种特殊情况 就是在更新数据的时候 我们希望加入新数据 需要使用到$set</p>
+</blockquote>
+<p>假设我们现在有个模型集合</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  _id: <span class="number">1</span>,</span><br><span class="line">  name: <span class="string">"luo"</span>,</span><br><span class="line">  money: <span class="number">250</span>,</span><br><span class="line">  cool: <span class="literal">true</span>,</span><br><span class="line">  details: &#123; <span class="attr">model</span>: <span class="string">"14Q2"</span>, <span class="attr">make</span>: <span class="string">"xxx"</span> &#125;,</span><br><span class="line">  tags: [ <span class="string">"apparel"</span>, <span class="string">"clothing"</span> ],</span><br><span class="line">  ratings: [ &#123; <span class="attr">by</span>: <span class="string">"ijk"</span>, <span class="attr">rating</span>: <span class="number">4</span> &#125; ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以这样更新</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">     $set:&#123;</span><br><span class="line">       money: <span class="number">500</span>,</span><br><span class="line">       details: &#123; <span class="attr">model</span>: <span class="string">"14Q3"</span>, <span class="attr">make</span>: <span class="string">"xyz"</span> &#125;,</span><br><span class="line">       tags: [ <span class="string">"coats"</span>, <span class="string">"outerwear"</span>, <span class="string">"clothing"</span> ]</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;)</span><br></pre></td></tr></table></figure>
+<p>上面的操作替换<code>money</code>的值为500，<code>details</code>为一个新的内嵌文档，<code>tags</code>为一个新的数组</p>
+<p>使用点号指定内嵌文档或者数组中字段</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $set:&#123;<span class="string">"details.nake"</span>:<span class="string">"newvalue"</span>&#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<p>查询<code>_id</code>等于100的，如下操作更新两个元素（数组索引是1）在数组tags字段和rating字段的第一个元素（索引是0）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $set:&#123;</span><br><span class="line">        <span class="string">"tags.1"</span>: <span class="string">"rain gear"</span>,</span><br><span class="line">        <span class="string">"ratings.0.rating"</span>: <span class="number">2</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<h5 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h5><p>通过<code>findOne</code>查询数据库是否存在该条记录</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) </span><br><span class="line"></span><br><span class="line">User.findOne(&#123;</span><br><span class="line">    usernam: username</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">userInfo</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(userInfo) &#123;</span><br><span class="line">        <span class="comment">// 数据库存在该条记录</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 反之不存在</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>假使想查询全部数据可以使用<code>find</code></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) </span><br><span class="line"></span><br><span class="line">User.find().then(<span class="function"><span class="keyword">function</span> (<span class="params">contents</span>) </span>&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="按条件查询"><a href="#按条件查询" class="headerlink" title="按条件查询"></a>按条件查询</h5><p>通过<code>where</code>来限制条件查询</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) <span class="comment">//引入前文生成的数据模型 实际上它是一个构造函数</span></span><br><span class="line"><span class="comment">//查询数据库中username为admin的数据</span></span><br><span class="line">User.where(&#123;<span class="attr">username</span>: admin&#125;).find().then(<span class="function"><span class="keyword">function</span> (<span class="params">userInfo</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(userInfo) &#123;</span><br><span class="line">        <span class="comment">// 数据库存在该条记录</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 反之不存在</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="低版本迭代错误"><a href="#低版本迭代错误" class="headerlink" title="低版本迭代错误"></a>低版本迭代错误</h4><blockquote>
+<p>截止本章撰写之时，<code>mongoose</code>已经迭代到5.x版本，<code>save()</code>方法是用于保存数据的功能函数，在5.x版本是支持<code>Promise</code>化的可以借此返回对象本身，实现异步操作，但是低版本则不支持，会报错<code>[MongoError: Unknown modifier: $pushAll in node js]</code></p>
+<p>问题参考：</p>
+<p>1<a href="https://stackoverflow.com/questions/48607918/mongoerror-unknown-modifier-pushall-in-node-js" target="_blank" rel="noopener">https://stackoverflow.com/questions/48607918/mongoerror-unknown-modifier-pushall-in-node-js</a></p>
+<p>2<a href="http://www.codes51.com/itwd/4535073.html" target="_blank" rel="noopener">http://www.codes51.com/itwd/4535073.html</a></p>
+</blockquote>
+<p>参考文档</p>
+<ul>
+<li>express and mongodb of MDN：<a href="https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Express_Nodejs/mongoose" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Express_Nodejs/mongoose</a></li>
+<li>mongoose 文档:：<a href="https://mongoosejs.com/docs/models.html" target="_blank" rel="noopener">https://mongoosejs.com/docs/models.html</a></li>
+</ul>
+<h4 id="开发分页功能"><a href="#开发分页功能" class="headerlink" title="开发分页功能"></a>开发分页功能</h4><p>引入相关的<code>model</code>数据库模型（这里使用user指代）</p>
+<ul>
+<li>user.find() - 获取数据库中所有数据</li>
+<li>user.limit(n) - 获取n条数据</li>
+<li>user.skip(n) - 忽略第n条数据查询</li>
+<li>user.sort({_id: -1}) - 根据参数排序 默认1升序 -1降序</li>
+</ul>
+<h4 id="联表查询"><a href="#联表查询" class="headerlink" title="联表查询"></a>联表查询</h4><blockquote>
+<p>上文提到<code>Schema</code>，我们称之为纲要，也可以看作为一个集合文档，在里面我们定义的每一个<code>key</code>，最终都会关联一个SchemaType。</p>
+</blockquote>
+<p><strong>SchemaTypes类型之ObjectId</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 关联数据-分类ID</span></span><br><span class="line">category: &#123;</span><br><span class="line">    type: mongoose.Schema.Types.ObjectId,</span><br><span class="line">    <span class="comment">//引用CategoryModel</span></span><br><span class="line">    ref:<span class="string">'CategoryModel'</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>利用<code>mongoose.Schema.Types.ObjectId</code>为<code>category</code>自定义定义一条ID（一般来说都是我们查询某表用来关联查询的ID）</p>
+<p>之后利用<code>populate</code>去连接数据表，如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content.find().sort(&#123;<span class="attr">_id</span>: <span class="number">-1</span>&#125;).populate(<span class="string">'category'</span>)</span><br></pre></td></tr></table></figure>
+<p>由于我们已经设置好了引用的表<code>ref</code>，所以此条语句便会去<code>CategoryModel</code>查询我们存储的ID对应的数据</p>
+<p>参考文档</p>
+<ul>
+<li>mongoose for SchemaTypes:<a href="https://mongoosejs.com/docs/schematypes.html#objectids" target="_blank" rel="noopener">https://mongoosejs.com/docs/schematypes.html#objectids</a></li>
+</ul>
+<h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><p>使用 <code>express.Router</code> 类来创建可安装的模块化路由处理程序 如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//api.js</span></span><br><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> router = express.Router()</span><br></pre></td></tr></table></figure>
+<p>建立此路由的中间件函数，一般我们拿来设置返回客户端数据的初始值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> responseData</span><br><span class="line">router.use(<span class="function"><span class="keyword">function</span> <span class="title">back</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    responseData = &#123;</span><br><span class="line">        code:<span class="number">0</span>,</span><br><span class="line">        message:<span class="string">''</span></span><br><span class="line">     &#125;</span><br><span class="line">     next() <span class="comment">//express规定必须调用next才可执行下一个函数</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>创建路由规则，及设置其回调函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">router.post(<span class="string">'/user/register'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// req.body 是借助 'body-parser'中间件产生的属性</span></span><br><span class="line">    <span class="keyword">if</span>(req.body.username &amp;&amp; req.body.password) &#123;</span><br><span class="line">     	 responseData.code = <span class="number">1</span></span><br><span class="line">    	 responseData.message = <span class="string">'you are success'</span></span><br><span class="line">   		 res.json(responseData)   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = router <span class="comment">//导出该模块对象</span></span><br></pre></td></tr></table></figure>
+<p>接着，在入口文件，为设置的路由绑定相关的路由规则</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//mian.js</span></span><br><span class="line">app.use(<span class="string">'/api'</span>,<span class="built_in">require</span>(<span class="string">'../routers/api.js'</span>))  <span class="comment">//访问到`/api`路径时，调用对应的路由模块进行处理</span></span><br></pre></td></tr></table></figure>
+<p>此应用程序现在可处理针对 <code>/api</code> 和 <code>/api/user/register</code> 的请求，调用特定于此路由的 <code>back</code> 中间件函数</p>
+<blockquote>
+<p>小结：我们可以发现诸如*.use的语法都是为预设绑定中间件函数而使用的，这个问题可以加深研究</p>
+</blockquote>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><blockquote>
+<p>使用mongoose的过程中存在以下异常日志</p>
+<p>(node:3080) DeprecationWarning: Mongoose: mpromise (mongoose’s default promise library) is deprecated, plug in your own promise library instead: <a href="http://mongoosejs.com/docs/promises.html" target="_blank" rel="noopener">http://mongoosejs.com/docs/promises.html</a></p>
+<p>mongoose弃用了自身promise库 需自行引入新的promise库解决</p>
+<p>相关答案</p>
+<p>1<a href="https://stackoverflow.com/questions/38138445/node3341-deprecationwarning-mongoose-mpromise" target="_blank" rel="noopener">https://stackoverflow.com/questions/38138445/node3341-deprecationwarning-mongoose-mpromise</a></p>
+<p>2<a href="https://www.jianshu.com/p/ef163b9b0ef7" target="_blank" rel="noopener">https://www.jianshu.com/p/ef163b9b0ef7</a></p>
+</blockquote>
+<h3 id="实时监听文件"><a href="#实时监听文件" class="headerlink" title="实时监听文件"></a>实时监听文件</h3><p><code>npm i -g supervisor</code> 可实时监听文件变化</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/23/Sqlite3常见用法及分页实例/" rel="next" title="Sqlite3常见用法及分页实例">
+                <i class="fa fa-chevron-left"></i> Sqlite3常见用法及分页实例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/11/JS实现二叉树/" rel="prev" title="JS实现二叉树">
+                JS实现二叉树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">你只有拼尽全力，才能看起来毫不费力</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#开始"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#路由绑定"><span class="nav-number">1.1.</span> <span class="nav-text">路由绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析请求方法"><span class="nav-number">1.2.</span> <span class="nav-text">解析请求方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板引擎"><span class="nav-number">2.</span> <span class="nav-text">模板引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指定模板引擎-swig"><span class="nav-number">2.1.</span> <span class="nav-text">指定模板引擎-swig</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置模板文件存放的目录"><span class="nav-number">2.2.</span> <span class="nav-text">设置模板文件存放的目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注册模板引擎"><span class="nav-number">2.3.</span> <span class="nav-text">注册模板引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读取模板引擎文件"><span class="nav-number">2.4.</span> <span class="nav-text">读取模板引擎文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#取消模板缓存"><span class="nav-number">2.5.</span> <span class="nav-text">取消模板缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模板的继承"><span class="nav-number">2.6.</span> <span class="nav-text">模板的继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模板的引入"><span class="nav-number">2.7.</span> <span class="nav-text">模板的引入</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#托管静态资源文件"><span class="nav-number">3.</span> <span class="nav-text">托管静态资源文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过Cookies缓存登录相关状态"><span class="nav-number">4.</span> <span class="nav-text">通过Cookies缓存登录相关状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库及相关工具安装"><span class="nav-number">5.</span> <span class="nav-text">数据库及相关工具安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载"><span class="nav-number">5.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#windows下使用"><span class="nav-number">5.2.</span> <span class="nav-text">windows下使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作数据库"><span class="nav-number">5.3.</span> <span class="nav-text">操作数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#增加数据"><span class="nav-number">5.3.1.</span> <span class="nav-text">增加数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#删除数据"><span class="nav-number">5.3.2.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#改变数据"><span class="nav-number">5.3.3.</span> <span class="nav-text">改变数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查询数据"><span class="nav-number">5.3.4.</span> <span class="nav-text">查询数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#按条件查询"><span class="nav-number">5.3.5.</span> <span class="nav-text">按条件查询</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#低版本迭代错误"><span class="nav-number">5.4.</span> <span class="nav-text">低版本迭代错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发分页功能"><span class="nav-number">5.5.</span> <span class="nav-text">开发分页功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联表查询"><span class="nav-number">5.6.</span> <span class="nav-text">联表查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由"><span class="nav-number">6.</span> <span class="nav-text">路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常"><span class="nav-number">7.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实时监听文件"><span class="nav-number">8.</span> <span class="nav-text">实时监听文件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
