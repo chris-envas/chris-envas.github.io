@@ -108,29 +108,25 @@
 
 
 
-  <meta name="description" content="JS是一门基于原型的语言，使用面向对象(oop)的方式来开发时，常常会碰到继承的问题。理解原型链的工作原理，势必事半功倍。">
-<meta name="keywords" content="node.js linux javascript java css http ssr">
+  <meta name="description" content="我一直都知道，super是constructor的参数，但是一直不太清楚ES6在底层帮我干了什么，但是我有一个大概的猜测，为了改变this的指向，调用函数时底层应该会进行了一个call/apply的指向绑定，但是具体行为，我并不是特别清楚，有人说，管那么多干嘛，用就行了，但是我还是想知道，它干了什么？">
+<meta name="keywords" content="前端">
 <meta property="og:type" content="article">
-<meta property="og:title" content="原型链">
-<meta property="og:url" content="http://yoursite.com/2019/02/21/原型链/index.html">
+<meta property="og:title" content="探究super关键字">
+<meta property="og:url" content="http://yoursite.com/2019/11/30/探究继承中的super关键字/index.html">
 <meta property="og:site_name" content="锦衣无涯">
-<meta property="og:description" content="JS是一门基于原型的语言，使用面向对象(oop)的方式来开发时，常常会碰到继承的问题。理解原型链的工作原理，势必事半功倍。">
+<meta property="og:description" content="我一直都知道，super是constructor的参数，但是一直不太清楚ES6在底层帮我干了什么，但是我有一个大概的猜测，为了改变this的指向，调用函数时底层应该会进行了一个call/apply的指向绑定，但是具体行为，我并不是特别清楚，有人说，管那么多干嘛，用就行了，但是我还是想知道，它干了什么？">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://s2.ax1x.com/2019/02/21/kWU3z6.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/02/21/kR33LR.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/02/21/kR8Qtf.png">
-<meta property="og:updated_time" content="2019-02-21T15:40:35.415Z">
+<meta property="og:updated_time" content="2020-01-21T13:21:56.067Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="原型链">
-<meta name="twitter:description" content="JS是一门基于原型的语言，使用面向对象(oop)的方式来开发时，常常会碰到继承的问题。理解原型链的工作原理，势必事半功倍。">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/02/21/kWU3z6.png">
+<meta name="twitter:title" content="探究super关键字">
+<meta name="twitter:description" content="我一直都知道，super是constructor的参数，但是一直不太清楚ES6在底层帮我干了什么，但是我有一个大概的猜测，为了改变this的指向，调用函数时底层应该会进行了一个call/apply的指向绑定，但是具体行为，我并不是特别清楚，有人说，管那么多干嘛，用就行了，但是我还是想知道，它干了什么？">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/02/21/原型链/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/30/探究继承中的super关键字/">
 
 
 
@@ -140,7 +136,7 @@
   };
 </script>
 
-  <title>原型链 | 锦衣无涯</title>
+  <title>探究super关键字 | 锦衣无涯</title>
   
 
 
@@ -332,11 +328,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/21/原型链/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/30/探究继承中的super关键字/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="罗锦旭">
-      <meta itemprop="description" content="你只有拼尽全力，才能看起来毫不费力">
+      <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往留存的更久">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -349,7 +345,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">原型链
+          <h1 class="post-title" itemprop="name headline">探究super关键字
               
             
           </h1>
@@ -374,34 +370,28 @@
                 
               
 
-              <time title="创建时间：2019-02-21 23:30:12 / 修改时间：23:40:35" itemprop="dateCreated datePublished" datetime="2019-02-21T23:30:12+08:00">2019-02-21</time>
+              <time title="创建时间：2019-11-30 22:11:32" itemprop="dateCreated datePublished" datetime="2019-11-30T22:11:32+08:00">2019-11-30</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-01-21 21:21:56" itemprop="dateModified" datetime="2020-01-21T21:21:56+08:00">2020-01-21</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -430,26 +420,12 @@
       
 
       
-        <p>JS是一门基于原型的语言，使用面向对象(oop)的方式来开发时，常常会碰到继承的问题。理解原型链的工作原理，势必事半功倍。</p>
+        <p>我一直都知道，<code>super</code>是<code>constructor</code>的参数，但是一直不太清楚ES6在底层帮我干了什么，但是我有一个大概的猜测，为了改变<code>this</code>的指向，调用函数时底层应该会进行了一个<code>call/apply</code>的指向绑定，但是具体行为，我并不是特别清楚，有人说，管那么多干嘛，用就行了，但是我还是想知道，它干了什么？</p>
 <a id="more"></a>
-<h4 id="什么是原型链"><a href="#什么是原型链" class="headerlink" title="什么是原型链"></a>什么是原型链</h4><p>首先，创建一个对象</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">name</span>: <span class="string">'obj'</span>&#125;</span><br></pre></td></tr></table></figure>
-<p>控制台打印</p>
-<p><img src="https://s2.ax1x.com/2019/02/21/kWU3z6.png" alt="avatar"></p>
-<p>我们并未对<code>obj</code>赋予任何的属性和方法</p>
-<p>可是它为什么有  valueOf / toString/constructor 属性呢？使用<code>console.dir()</code>打印结果如下</p>
-<p><img src="https://s2.ax1x.com/2019/02/21/kR33LR.png" alt="obj"></p>
-<p>又上图可知，<code>obj</code>对象有一个<code>__proto__</code>属性，而<code>obj.__proto__</code>又包含了 valueOf / toString/constructor三个属性</p>
-<p>由此可见，似乎当我们调用<code>obj.valueOf()</code>时，JS引擎似乎会在检查<code>obj</code>对象不存在<code>valueOf()</code>后，沿着<code>obj.__proto__</code>继续寻找，直至找到对应的方法为止</p>
-<p>这个设想是成立的，JS引擎确实是这样的运行的，这一切都是因为<strong>JS是一门基于原型的语言</strong></p>
-<p>JS引擎沿着<code>__proto__</code>不断搜索的这个过程，构造了一条由<code>__proto__</code>组成的原型链子我们称之为<strong>原型链</strong></p>
-<h4 id="共享原型链"><a href="#共享原型链" class="headerlink" title="共享原型链"></a>共享原型链</h4><p>原型链有一大特点就是共享（对，就像共享单车，大家都可以骑..emm）</p>
-<p>在文章开头我们创建了<code>obj</code>对象，在那之后，我们没有对其做过任何处理，它天生就拥有了一个<code>__proto__</code>属性，现在我们再来创建一个<code>obj2</code>对象,额，它也天生拥有一个<code>__proto__</code>属性，接着我们来做一个有趣的比较</p>
-<p><img src="https://s2.ax1x.com/2019/02/21/kR8Qtf.png" alt="比较"></p>
-<p>二者的<code>__proto__</code>是相等的，这就是共享原型链！</p>
-<h4 id="差异化"><a href="#差异化" class="headerlink" title="差异化"></a>差异化</h4><p>“同个老爸。虽然可以继承同样的财产，但每一个人的选择肯定是不同的”</p>
-<p>想让<code>obj</code>与<code>obj2</code>永远差异化的行为。</p>
-<p>只需把特定的方法，直接赋值在它身上就行，新增的属性，即使跟原型链中的某个方法重名也没关系，因此，读取属性时，依据<strong>原型链的搜索</strong>，我们一定可以率先执行新增的方法</p>
+<p>有人问：我为什么要在类中的constructor中调用super</p>
+<p>有人说：因为在ES6中，只有调用了super，才能引用this</p>
+<p>为什么？？？</p>
+<p>假设回到ES5实现继承，我们首先会定义一个父类</p>
 
       
     </div>
@@ -471,6 +447,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
 
       
       
@@ -480,8 +462,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/11/JS实现二叉树/" rel="next" title="JS实现二叉树">
-                <i class="fa fa-chevron-left"></i> JS实现二叉树
+              <a href="/2019/10/07/shadowsocks-libev-server/" rel="next" title="shadowsocks-libev-server">
+                <i class="fa fa-chevron-left"></i> shadowsocks-libev-server
               </a>
             
           </div>
@@ -490,8 +472,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/21/new关键字解析/" rel="prev" title="new关键字解析">
-                new关键字解析 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/11/30/React小结/" rel="prev" title="React小结">
+                React小结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -537,22 +519,13 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">罗锦旭</p>
-              <p class="site-description motion-element" itemprop="description">你只有拼尽全力，才能看起来毫不费力</p>
+              <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往留存的更久</p>
           </div>
 
           
@@ -562,7 +535,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -629,22 +602,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是原型链"><span class="nav-number">1.</span> <span class="nav-text">什么是原型链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享原型链"><span class="nav-number">2.</span> <span class="nav-text">共享原型链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#差异化"><span class="nav-number">3.</span> <span class="nav-text">差异化</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
