@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES Module - 浏览器原生模块支持">
+<meta property="og:url" content="http://yoursite.com/2020/08/22/ES-Module-浏览器原生模块支持/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/26/aCRYIe.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/26/aCa4A0.png">
+<meta property="og:updated_time" content="2020-08-22T09:22:05.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES Module - 浏览器原生模块支持">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/26/aCRYIe.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/22/ES-Module-浏览器原生模块支持/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ES Module - 浏览器原生模块支持 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<link rel="stylesheet" href="/music/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/music/APlayer.min.js"></script>
+<script type="text/javascript" src="/music/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/22/ES-Module-浏览器原生模块支持/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ES Module - 浏览器原生模块支持
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-22 17:14:19 / 修改时间：17:22:05" itemprop="dateCreated datePublished" datetime="2020-08-22T17:14:19+08:00">2020-08-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://s1.ax1x.com/2020/07/26/aCRYIe.jpg" alt="aCRYIe.jpg"></p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>JavaScript本来只是用来在网页中执行简单的脚本功能，然而历史的进程将JavaScript推上了更大的舞台，编写复杂的大型应用，需要一种能将JavaScript程序拆分为可单独导入的模块机制，Node.js为此提供了CommonJS，即使CommonJS依然存在不足，但是瑕不掩瑜，在Node.js服务端的开发中，它依然大放异彩，可惜的是，在客户端（泛指浏览器）却迟迟没有诞生合适的模块功能，开发者凭借自身的聪明才智制定了CMD与AMD规范，并创造了sea.js和require.js两种规范的实现，然而类库始终是类库，并非完美的解决方案，面对多种规范并存的现象，开发者迫切的希望能有一种前后端通用的模块机制，终于浏览器原生提供了模块功能，它使得JavaScript更为完整</p>
+<h2 id="模块关键字"><a href="#模块关键字" class="headerlink" title="模块关键字"></a>模块关键字</h2><p>对于初学者，网上大量的教材或资料其实依然采用了CommonJS模块机制，因此有不少人在最初的阶段会存在困惑，弄不清楚几个关键字的用法，甚至二者发生混淆（不考虑其他模块规范）</p>
+<h3 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导出</span></span><br><span class="line"><span class="comment">// a.js 假设仅需导出一个模块（a函数）</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> a = <span class="built_in">require</span>(<span class="string">'./a.js'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// b.js 假设需要导出多个模块</span></span><br><span class="line">exports.a = <span class="function"><span class="keyword">function</span> <span class="title">a</span> (<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125;</span><br><span class="line">exports.b = <span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125; </span><br><span class="line">...</span><br><span class="line"><span class="comment">// 引入</span></span><br><span class="line"><span class="keyword">const</span> &#123;a, b&#125; = <span class="built_in">require</span>(<span class="string">'./b.js'</span>)</span><br></pre></td></tr></table></figure>
+<p>初学者最常见的困惑是<code>module.exports</code>与<code>exports</code>之间的关系，其实这是Node.js在包装模块输出时提供的额外变量，其实本质上将相当于<code>var exports = module.exports</code></p>
+<p>但是伴随而来的是更大的困惑，为什么<code>exports</code>导出模块的方式，是以对象赋予属性的方式，而不是直接赋值导出，厘清这一问题的关键在于，明白变量的赋值行为的含义，JS基础扎实的开发者，很轻易就会发现，此种做法将改写变量，从而偏离Node.js预设的逻辑，在最终模块导出时，出现差错</p>
+<h3 id="ESMudule"><a href="#ESMudule" class="headerlink" title="ESMudule"></a>ESMudule</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导出</span></span><br><span class="line"><span class="comment">// c.js 假设仅需导出一个模块（c函数）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">c</span> (<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 引入 </span></span><br><span class="line"><span class="keyword">import</span> customName <span class="keyword">from</span> <span class="string">"./c.js"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// d.js 假设需要导出多个模块</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">d</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">e</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入 </span></span><br><span class="line"><span class="comment">// 知晓确切的函数名称 方可引入</span></span><br><span class="line"><span class="keyword">import</span> &#123;d,e&#125; <span class="keyword">from</span> <span class="string">"./d.js"</span> </span><br><span class="line"><span class="comment">// 通过 * 号使模块整体导出</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> m <span class="keyword">from</span> <span class="string">"./d.js"</span></span><br></pre></td></tr></table></figure>
+<p>如果是采用了<code>export default</code>输出的模块，开发者引用模块时可以自定义模块名，而通过<code>export</code>导出的模块，你必须知晓其确切的函数名称才可以完成引入，在某种程度上这很麻烦，但也可以通过<code>* as moduleName</code>的方式，将所有<code>export</code>模块的内容组合成一个对象进行返回</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>可以看到ESmodule的导出行为有些特别，它比CommonJS的导出更为简洁，性能更加的优异，这是为什么，其本质的原因就是二者的执行阶段与方式有所不同</p>
+<p>CommonJS是在发现<code>require</code>关键字引用模块时，便会运行整个模块的代码，取到值并进行缓存，从那之后<code>require</code>的再次引用只需在缓存中取值即可，这就变成了运行一次，往后只需在缓存中取值（当然，缓存也是会更新的）</p>
+<p>那么问题来了：</p>
+<p>假设该模块文件下一共导出了10个模块，而在实际开发中，我们仅仅用到其中一个模块，这就造成了引用浪费，将多余的代码塞进缓存却不使用，这就造成了内存空间浪费</p>
+<p>ESModule则采用了动态只读引用的方式加载模块代码，<code>import</code>作为只读的关键字，在发现引用时，就会生成一个只读引用，等待脚本执行的阶段，根据该引用前往加载模块中取值，而这便是动态引用，即取即用，并且该过程是<strong>异步的</strong></p>
+<p>异步的模块加载机制是非常重要的，在浏览器中，是无法承受同步加载模块的代价，一旦某个模块出现问题，会导致网页白屏迟迟无法渲染，又或是模块过于庞大，导致网页加载延迟，在重视用户体验的客户端会造成灾难性的后果</p>
+<h2 id="浏览器原生支持模块"><a href="#浏览器原生支持模块" class="headerlink" title="浏览器原生支持模块"></a>浏览器原生支持模块</h2><p>截止笔者撰写文章，主流浏览器已基本兼容原生模块</p>
+<p><img src="https://s1.ax1x.com/2020/07/26/aCa4A0.png" alt="aCa4A0.png"></p>
+<p>那么如何在浏览器中直接使用模块机制，答案是通过<code>&lt;script type=&quot;module&quot;&gt;</code>标识告知浏览器将启用原生模块机制，若是普通的<code>script</code>标签将报错</p>
+<p>创建项目，注：文章代码引自<a href="https://github.com/mdn/js-examples/tree/master/modules" target="_blank" rel="noopener">MDN提供的示例</a>，并稍做修改，可前往查看</p>
+<p>项目结构目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">index.html</span><br><span class="line">index.js</span><br><span class="line">main.js</span><br><span class="line">modules/</span><br><span class="line">    canvas.mjs</span><br><span class="line">    square.mjs</span><br></pre></td></tr></table></figure>
+<p>注意事项</p>
+<p>1、原生模块引用无法通过本地测试，因JS文件安全限制，俗称跨域，因此开启本地服务加载页面</p>
+<p>2、原生模块引用必须设置正确的<code>MIME-type</code>，这非常重要，否则浏览器将无法正确加载模块，常见报错为:<code>The server responded with a non-JavaScript MIME type</code></p>
+<p>模块导出</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// modules/canvas.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params">id, parent, width, height</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> divWrapper = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</span><br><span class="line">  <span class="keyword">let</span> canvasElem = <span class="built_in">document</span>.createElement(<span class="string">'canvas'</span>);</span><br><span class="line">  parent.appendChild(divWrapper);</span><br><span class="line">  divWrapper.appendChild(canvasElem);</span><br><span class="line"></span><br><span class="line">  divWrapper.id = id;</span><br><span class="line">  canvasElem.width = width;</span><br><span class="line">  canvasElem.height = height;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> ctx = canvasElem.getContext(<span class="string">'2d'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    ctx: ctx,</span><br><span class="line">    id: id</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createReportList</span>(<span class="params">wrapperId</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> list = <span class="built_in">document</span>.createElement(<span class="string">'ul'</span>);</span><br><span class="line">  list.id = wrapperId + <span class="string">'-reporter'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> canvasWrapper = <span class="built_in">document</span>.getElementById(wrapperId);</span><br><span class="line">  canvasWrapper.appendChild(list);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> list.id;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; create, createReportList &#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// modules/square.js</span></span><br><span class="line"><span class="keyword">const</span> name = <span class="string">'square'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params">ctx, length, x, y, color</span>) </span>&#123;</span><br><span class="line">  ctx.fillStyle = color;</span><br><span class="line">  ctx.fillRect(x, y, length, length);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    length: length,</span><br><span class="line">    x: x,</span><br><span class="line">    y: y,</span><br><span class="line">    color: color</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">random</span>(<span class="params">min, max</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">let</span> num = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * (max - min)) + min;</span><br><span class="line">   <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reportArea</span>(<span class="params">length, listId</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> listItem = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span><br><span class="line">  listItem.textContent = <span class="string">`<span class="subst">$&#123;name&#125;</span> area is <span class="subst">$&#123;length * length&#125;</span>px squared.`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> list = <span class="built_in">document</span>.getElementById(listId);</span><br><span class="line">  list.appendChild(listItem);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reportPerimeter</span>(<span class="params">length, listId</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> listItem = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span><br><span class="line">  listItem.textContent = <span class="string">`<span class="subst">$&#123;name&#125;</span> perimeter is <span class="subst">$&#123;length * <span class="number">4</span>&#125;</span>px.`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> list = <span class="built_in">document</span>.getElementById(listId);</span><br><span class="line">  list.appendChild(listItem);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSquare</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> color1 = random(<span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line">  <span class="keyword">let</span> color2 = random(<span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line">  <span class="keyword">let</span> color3 = random(<span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line">  <span class="keyword">let</span> color = <span class="string">`rgb(<span class="subst">$&#123;color1&#125;</span>,<span class="subst">$&#123;color2&#125;</span>,<span class="subst">$&#123;color3&#125;</span>)`</span></span><br><span class="line">  ctx.fillStyle = color;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> x = random(<span class="number">0</span>, <span class="number">480</span>);</span><br><span class="line">  <span class="keyword">let</span> y = random(<span class="number">0</span>, <span class="number">320</span>);</span><br><span class="line">  <span class="keyword">let</span> length = random(<span class="number">10</span>, <span class="number">100</span>);</span><br><span class="line">  ctx.fillRect(x, y, length, length);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    length: length,</span><br><span class="line">    x: x,</span><br><span class="line">    y: y,</span><br><span class="line">    color: color</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; name, draw, reportArea, reportPerimeter &#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> randomSquare;</span><br></pre></td></tr></table></figure>
+<p>模块引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; create, createReportList &#125; <span class="keyword">from</span> <span class="string">'./modules/canvas.js'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; name, draw, reportArea, reportPerimeter &#125; <span class="keyword">from</span> <span class="string">'./modules/square.js'</span>;</span><br><span class="line"><span class="keyword">import</span> randomSquare <span class="keyword">from</span> <span class="string">'./modules/square.js'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myCanvas = create(<span class="string">'myCanvas'</span>, <span class="built_in">document</span>.body, <span class="number">480</span>, <span class="number">320</span>);</span><br><span class="line"><span class="keyword">let</span> reportList = createReportList(myCanvas.id);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> square1 = draw(myCanvas.ctx, <span class="number">50</span>, <span class="number">50</span>, <span class="number">100</span>, <span class="string">'blue'</span>);</span><br><span class="line">reportArea(square1.length, reportList);</span><br><span class="line">reportPerimeter(square1.length, reportList);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Use the default</span></span><br><span class="line"><span class="keyword">let</span> square2 = randomSquare(myCanvas.ctx);</span><br></pre></td></tr></table></figure>
+<p>页面加载</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en-US"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Basic JavaScript module example<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">      canvas &#123;</span></span><br><span class="line"><span class="undefined">        border: 1px solid black;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"module"</span> <span class="attr">src</span>=<span class="string">"main.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    Basic JavaScript module example </span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务端代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">'url'</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">const</span> mime = <span class="built_in">require</span>(<span class="string">'mime'</span>)</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">request,response</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> urlObj = url.parse(request.url)</span><br><span class="line">    <span class="keyword">const</span> urlPathname  = urlObj.pathname</span><br><span class="line">    <span class="keyword">const</span> filename = path.join(__dirname, urlPathname)</span><br><span class="line">    <span class="keyword">const</span> ext = path.parse(urlPathname).ext</span><br><span class="line">    <span class="keyword">const</span> mimeType = mime.getType(ext) || <span class="string">""</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(mimeType) &#123;</span><br><span class="line">        fs.readFile(filename, (err, data) =&gt; &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"mimeType:"</span>+mimeType)</span><br><span class="line">            <span class="keyword">if</span>(err) &#123;</span><br><span class="line">                response.writeHead(<span class="number">404</span>, &#123; <span class="string">"Content-Type"</span>: <span class="string">"text/plain"</span> &#125;);</span><br><span class="line">                response.write(<span class="string">"404 - File is not found!"</span>)</span><br><span class="line">                response.end()</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                response.writeHead(<span class="number">200</span>, &#123; <span class="string">"Content-Type"</span>: mimeType&#125;);</span><br><span class="line">                response.end(data)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> html = fs.readFileSync(<span class="string">"./index.html"</span>,<span class="string">'utf-8'</span>)</span><br><span class="line">        response.end(html)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;).listen(<span class="number">8080</span>,() =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server id dev'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>启动服务</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/luojinxu520/basic-modules" target="_blank" rel="noopener">源码clone直接运行</a></p>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>最近有留意到<a href="">vite</a>的同学应该知道，实际上vite就是开发过程中没有打包，直接将ES模块源码输出给浏览器，使用浏览器自带的<code>&lt;script module&gt;</code>原生支持，通过每次HTTP请求进行import,开发服务器会直接拦截请求完成代码转换，例如.vue文件的请求，会拿来进行相关转换，最终输出为浏览器可接受的资源，这相比较于Webpack在启动和热更新的效率，提升了数十倍，在<a href="https://www.bilibili.com/video/BV1qC4y18721?t=1492" target="_blank" rel="noopener">【Web前端会客厅】Vue之父尤雨溪深度解读Vue3.0的开发思路</a>视频中有讲到，按照小右的说法，秒开！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/21/Javascript异步编程/" rel="next" title="聊聊JavaScript的异步编程">
+                <i class="fa fa-chevron-left"></i> 聊聊JavaScript的异步编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块关键字"><span class="nav-number">2.</span> <span class="nav-text">模块关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CommonJS"><span class="nav-number">2.1.</span> <span class="nav-text">CommonJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESMudule"><span class="nav-number">2.2.</span> <span class="nav-text">ESMudule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别"><span class="nav-number">2.3.</span> <span class="nav-text">区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器原生支持模块"><span class="nav-number">3.</span> <span class="nav-text">浏览器原生支持模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
