@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文指出的服务端渲染，并非传统意义上的后端模板化渲染，在前后端分离的时代，前端接管了View层的全部工作，并使用了MVVM框架开发复杂应用，MVVM框架也存在一些缺陷主要是首屏渲染白屏及SEO不友好的问题，因此旧瓶装新酒，前端将渲染过程再次迁移服务端，但是这次借助了MVVM框架的力量，本质上的核心是同构渲染，相比于纯后端模板渲染的方式，同构渲染对页面的把控可以达到更小细粒度，同时也更加复杂，其中细">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探索服务端渲染">
+<meta property="og:url" content="http://yoursite.com/2020/09/08/探索服务端渲染/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="本文指出的服务端渲染，并非传统意义上的后端模板化渲染，在前后端分离的时代，前端接管了View层的全部工作，并使用了MVVM框架开发复杂应用，MVVM框架也存在一些缺陷主要是首屏渲染白屏及SEO不友好的问题，因此旧瓶装新酒，前端将渲染过程再次迁移服务端，但是这次借助了MVVM框架的力量，本质上的核心是同构渲染，相比于纯后端模板渲染的方式，同构渲染对页面的把控可以达到更小细粒度，同时也更加复杂，其中细">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/09/11/wNK6aQ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/09/11/wNM2wD.png">
+<meta property="og:updated_time" content="2021-01-04T09:40:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探索服务端渲染">
+<meta name="twitter:description" content="本文指出的服务端渲染，并非传统意义上的后端模板化渲染，在前后端分离的时代，前端接管了View层的全部工作，并使用了MVVM框架开发复杂应用，MVVM框架也存在一些缺陷主要是首屏渲染白屏及SEO不友好的问题，因此旧瓶装新酒，前端将渲染过程再次迁移服务端，但是这次借助了MVVM框架的力量，本质上的核心是同构渲染，相比于纯后端模板渲染的方式，同构渲染对页面的把控可以达到更小细粒度，同时也更加复杂，其中细">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/09/11/wNK6aQ.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/09/08/探索服务端渲染/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>探索服务端渲染 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<link rel="stylesheet" href="/music/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/music/APlayer.min.js"></script>
+<script type="text/javascript" src="/music/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/探索服务端渲染/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">探索服务端渲染
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-08 16:32:56" itemprop="dateCreated datePublished" datetime="2020-09-08T16:32:56+08:00">2020-09-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-01-04 17:40:51" itemprop="dateModified" datetime="2021-01-04T17:40:51+08:00">2021-01-04</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文指出的服务端渲染，并非传统意义上的后端模板化渲染，在前后端分离的时代，前端接管了View层的全部工作，并使用了MVVM框架开发复杂应用，MVVM框架也存在一些缺陷主要是首屏渲染白屏及SEO不友好的问题，因此旧瓶装新酒，前端将渲染过程再次迁移服务端，但是这次借助了MVVM框架的力量，本质上的核心是同构渲染，相比于纯后端模板渲染的方式，同构渲染对页面的把控可以达到更小细粒度，同时也更加复杂，其中细节也非常多！</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文探索的内容是如何将：<strong>将SPA应用通过同构的方式渲染到客户端</strong></p>
+<p>SPA应用的内容是通过JavaScript驱动的视图，因此人们发现，SPA应用虽然可以构建更加健壮、强大的web应用，但是存在两个缺点</p>
+<ul>
+<li>SEO不友好</li>
+<li>首屏渲染较慢</li>
+</ul>
+<p>为了解决这两个问题，人们想到将SPA应用在服务端渲染后下发，确切的说就是在服务端获取SPA应用<strong>快照</strong>，首屏渲染时采用服务端快照，后续应用逻辑则交由客户端代码接管，这种方式也被称之为<strong>同构</strong></p>
+<p>服务端渲染的知识点总体还是毕竟琐碎的</p>
+<p><img src="https://s1.ax1x.com/2020/09/11/wNK6aQ.png" alt="wNK6aQ.png"></p>
+<h2 id="服务端渲染组件"><a href="#服务端渲染组件" class="headerlink" title="服务端渲染组件"></a>服务端渲染组件</h2><p>创建组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">const</span> Home = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;div&gt;服务端渲染&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Home</span><br></pre></td></tr></table></figure>
+<p>使用React提供的<code>renderToString</code>在服务端解析组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Express <span class="keyword">from</span> <span class="string">"express"</span></span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">"../components/Home.js"</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; renderToString &#125; <span class="keyword">from</span> <span class="string">"react-dom/server"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = Express()</span><br><span class="line"><span class="keyword">const</span> content = renderToString(<span class="xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>)</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(req.url)</span><br><span class="line">    res.send(</span><br><span class="line">        <span class="string">`&lt;html&gt;</span></span><br><span class="line"><span class="string">        &lt;head&gt;</span></span><br><span class="line"><span class="string">          &lt;title&gt;ssr&lt;/title&gt;</span></span><br><span class="line"><span class="string">        &lt;/head&gt;</span></span><br><span class="line"><span class="string">        &lt;body&gt;</span></span><br><span class="line"><span class="string">          &lt;div id="root"&gt;<span class="subst">$&#123;content&#125;</span>&lt;/div&gt;</span></span><br><span class="line"><span class="string">        &lt;/body&gt;</span></span><br><span class="line"><span class="string">      &lt;/html&gt;</span></span><br><span class="line"><span class="string">        `</span></span><br><span class="line">    )</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">8080</span>,() =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server port on 8080'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>成功把React组件从服务端下发到客户端,可供爬虫爬取</p>
+<p><img src="https://s1.ax1x.com/2020/09/11/wNM2wD.png" alt="wNM2wD.png"></p>
+<p>总结：掌握React提供的解析组件方法<code>renderToString</code>，服务端才可以下发SPA应用，这一点在Vue亦是同个道理</p>
+<h2 id="同构"><a href="#同构" class="headerlink" title="同构"></a>同构</h2><p>所谓同构为何物？</p>
+<p>React提供了<code>renderToString</code>方法用于渲染组件生成HTML供服务端渲染优化SEO，但是组件中的事件处理将无法被激发，因为在服务端中这根本意义，因此我们需要生成一份专门用于客户端的React逻辑代码，这里称为<code>bundle.js</code>，用于激活React组件的事件处理能力，而这就是<strong>同构</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>ssr<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"/bundle.js"</span> &gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为此，我们需要先扩展服务端的静态资源处理能力，将<code>webpack</code>生成的<code>bundle.js</code>存放在public文件目录下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(Express.static(<span class="string">"public"</span>))</span><br></pre></td></tr></table></figure>
+<p>那么你是否好奇，所谓的<code>bundle.js</code>是什么？其实不过就是你最熟悉的纯客户端渲染编写入口文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span></span><br><span class="line"><span class="keyword">import</span> ReactDom <span class="keyword">from</span> <span class="string">"react-dom"</span></span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">"../components/Home.js"</span></span><br><span class="line"></span><br><span class="line">ReactDom.hydrate(<span class="xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>, <span class="built_in">document</span>.getElementById(<span class="string">"root"</span>))</span><br></pre></td></tr></table></figure>
+<p>对了，你肯定会好奇渲染时为什么不是<code>ReactDOM.render()</code>而是<code>ReactDOM.hydrate()</code></p>
+<p>这是因为服务端渲染的内容会存在标记，React可以在客户端识别到这一点，所以如果使用了<code>ReactDOM.hydrate()</code>方法，React会保留服务端的内容，仅触发组件的事件处理能力，如果用一句话来说明，那就是：<strong>既然你已经帮我处理了20%，那么剩下的80%我来搞定</strong></p>
+<p>总结：同构是服务端渲染的核心之一，因为客户端的<code>bundle.js</code>是驱动SPA应用的重点！</p>
+<h2 id="服务端路由"><a href="#服务端路由" class="headerlink" title="服务端路由"></a>服务端路由</h2><p>SPA应用大部分会采用前端路由功能，客户端路由代码按照正常标准一般书写，采用<code>BrowserRouter</code>包裹路由组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span></span><br><span class="line"><span class="keyword">import</span> ReactDom <span class="keyword">from</span> <span class="string">"react-dom"</span></span><br><span class="line"><span class="keyword">import</span> &#123;BrowserRouter&#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span></span><br><span class="line"><span class="keyword">import</span> Routes <span class="keyword">from</span> <span class="string">"../Routes"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;BrowserRouter&gt;</span><br><span class="line">            &#123;Routes&#125;</span><br><span class="line">        &lt;<span class="regexp">/BrowserRouter&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">ReactDom.hydrate(&lt;App /</span>&gt;, <span class="built_in">document</span>.getElementById(<span class="string">"root"</span>))</span><br></pre></td></tr></table></figure>
+<p><strong>但存在一个问题，在客户端运行React应用程序时，可以自动感知当前的URL,进而按照不同的逻辑加载React路由组件，但在服务端，React应用程序无法自动感知URL，必须在每次用户请求时才能感知，因此不能采用<code>BrowserRouter</code>而是必须使用<code>StaticRouter</code>，并在每次请求时获取<code>req.path</code>当前请求路径，将之挂载到<code>location</code>属性上，<code>StaticRouter</code>方能找到对应逻辑组件进行加载</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Express <span class="keyword">from</span> <span class="string">"express"</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; renderToString &#125; <span class="keyword">from</span> <span class="string">"react-dom/server"</span></span><br><span class="line"><span class="keyword">import</span> &#123;StaticRouter&#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span></span><br><span class="line"><span class="keyword">import</span> Routes <span class="keyword">from</span> <span class="string">"../Routes.js"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = Express()</span><br><span class="line">app.use(Express.static(<span class="string">"public"</span>))</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">   <span class="keyword">const</span> content = renderToString((</span><br><span class="line">      &lt;StaticRouter location=&#123;req.path&#125; context=&#123;&#123;&#125;&#125;&gt;</span><br><span class="line">        &#123;Routes&#125;</span><br><span class="line">      &lt;<span class="regexp">/StaticRouter&gt;</span></span><br><span class="line"><span class="regexp">    ))</span></span><br><span class="line"><span class="regexp">    const content = renderToString((</span></span><br><span class="line"><span class="regexp">      &lt;StaticRouter location=&#123;req.path&#125; context=&#123;&#123;&#125;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &#123;Routes&#125;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>StaticRouter&gt;</span><br><span class="line">    ))</span><br><span class="line">    res.send( </span><br><span class="line">        <span class="string">`&lt;html&gt;</span></span><br><span class="line"><span class="string">        &lt;head&gt;</span></span><br><span class="line"><span class="string">          &lt;title&gt;ssr&lt;/title&gt;</span></span><br><span class="line"><span class="string">        &lt;/head&gt;</span></span><br><span class="line"><span class="string">        &lt;body&gt;</span></span><br><span class="line"><span class="string">          &lt;div id="root"&gt;<span class="subst">$&#123;content&#125;</span>&lt;/div&gt;</span></span><br><span class="line"><span class="string">          &lt;script src="./index.js" &gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">        &lt;/body&gt;</span></span><br><span class="line"><span class="string">      &lt;/html&gt;</span></span><br><span class="line"><span class="string">        `</span></span><br><span class="line">    )</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>优化：多路由中的公共组件复用</strong></p>
+<blockquote>
+<p>假设在<code>Home</code>组件与<code>Login</code>组件中都需要用到<code>Header</code>组件，那么需要在组件中引入两次，如果有N个路由将需要重复引入N次</p>
+</blockquote>
+<p>对此，可以使用<code>react-router-config</code>提供的<code>renderRoutes</code>方法解决这个问题</p>
+<p>首先需要调整路由文件的结构,采用数组嵌套的形式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [&#123;</span><br><span class="line">    path: <span class="string">'/'</span>,</span><br><span class="line">    component: App,</span><br><span class="line">    routes: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">'/'</span>,</span><br><span class="line">            exact: <span class="literal">true</span>,</span><br><span class="line">            component: Home,</span><br><span class="line">            loadData: Home.loadData,</span><br><span class="line">            key: <span class="string">'home'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">'/login'</span>,</span><br><span class="line">            exact: <span class="literal">true</span>,</span><br><span class="line">            component: Login,</span><br><span class="line">            key: <span class="string">'login'</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure>
+<p>通过<code>renderRoutes</code>识别修改后的路由文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// client/index.js</span></span><br><span class="line"><span class="keyword">import</span> Routes <span class="keyword">from</span> <span class="string">"../Routes"</span></span><br><span class="line"><span class="keyword">import</span> &#123; renderRoutes &#125; <span class="keyword">from</span> <span class="string">"react-router-config"</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;Provider store=&#123;getClientStore()&#125;&gt;</span><br><span class="line">            &lt;BrowserRouter&gt;</span><br><span class="line">               &#123;renderRoutes(Routes)&#125;</span><br><span class="line">            &lt;<span class="regexp">/BrowserRouter&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>Provider&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// server/util.js</span></span><br><span class="line"><span class="keyword">const</span> content = renderToString((</span><br><span class="line">        &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">             &lt;StaticRouter location=&#123;req.path&#125; context=&#123;&#123;&#125;&#125;&gt;</span><br><span class="line">                &#123;renderRoutes(routes)&#125;</span><br><span class="line">            &lt;<span class="regexp">/StaticRouter&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>Provider&gt;</span><br><span class="line">  ))</span><br></pre></td></tr></table></figure>
+<p>最后修改一级路由<code>/</code>路径对应的组件,同样使用<code>renderRoutes</code>方法，此时可以通过<code>props</code>属性获取路由文件中的嵌套路由，作为参数调用，方可正确加载我们需要的组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span></span><br><span class="line"><span class="keyword">import</span> Header <span class="keyword">from</span> <span class="string">"./common/header"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; renderRoutes &#125; <span class="keyword">from</span> <span class="string">"react-router-config"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> App = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;Header /&gt;</span><br><span class="line">            &#123;renderRoutes(props.route.routes)&#125;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App</span></span><br></pre></td></tr></table></figure>
+<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><p>数据同步是服务端渲染的另一核心，因为服务端与客户端必须维持一套相同数据激发的视图，否则在客户端会发生重绘甚至出错</p>
+<p>因此需要借助<code>redux</code>的能力，为组件提供数据仓库<code>store</code>，下面先将组件与<code>redux</code>连接在一起</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//store.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware &#125; <span class="keyword">from</span> <span class="string">"redux"</span></span><br><span class="line"><span class="keyword">import</span> thunk <span class="keyword">from</span> <span class="string">'redux-thunk'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> reducer = <span class="function">(<span class="params">state = &#123;name: <span class="string">'de'</span>&#125;, action</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> state</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每次返回新的Store</span></span><br><span class="line"><span class="keyword">const</span> getStore = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> createStore(reducer, applyMiddleware(thunk))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> getStore</span><br></pre></td></tr></table></figure>
+<p>在服务端与客户端逻辑中，一致通过<code>Provider</code>进行<code>store</code>挂载</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// client/index.js</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">import</span> Routes <span class="keyword">from</span> <span class="string">"../Routes"</span></span><br><span class="line"><span class="keyword">import</span> getStore <span class="keyword">from</span> <span class="string">"../store/index.js"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;Provider store=&#123;getStore()&#125;&gt;</span><br><span class="line">            &lt;BrowserRouter&gt;</span><br><span class="line">                &#123;Routes&#125;</span><br><span class="line">            &lt;<span class="regexp">/BrowserRouter&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>Provider&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server/index.js</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span></span><br><span class="line"><span class="keyword">import</span> getStore <span class="keyword">from</span> <span class="string">"../store/index.js"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> render = <span class="function">(<span class="params">req</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = renderToString((</span><br><span class="line">        &lt;Provider store=&#123;getStore()&#125;&gt;</span><br><span class="line">             &lt;StaticRouter location=&#123;req.path&#125; context=&#123;&#123;&#125;&#125;&gt;</span><br><span class="line">                &#123;Routes&#125;</span><br><span class="line">            &lt;<span class="regexp">/StaticRouter&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>Provider&gt;</span><br><span class="line">    ))</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在组件中利用<code>react-redux</code>提供的<code>connect</code>方法连接数据，<code>mapStateToProps</code>与<code>mapDispatchToProps</code>分别用于映射数据与方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Home.js</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span></span><br><span class="line"><span class="keyword">import</span> &#123; getHomeList &#125; <span class="keyword">from</span> <span class="string">"./store/actions"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Home = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    props.getHomeList()</span><br><span class="line">  &#125;,[])</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Header /&gt;</span><br><span class="line">      &lt;div&gt;服务端渲染:&#123;props.name&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; &#123;alert(1)&#125;&#125;&gt;click me&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 将state映射到props</span></span><br><span class="line"><span class="regexp">const mapStateToProps = state =&gt; (&#123;</span></span><br><span class="line"><span class="regexp">  name: state.home.name</span></span><br><span class="line"><span class="regexp">&#125;)</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 将action方法映射到props</span></span><br><span class="line"><span class="regexp">const mapDispatchToProps = dispatch =&gt; (&#123;</span></span><br><span class="line"><span class="regexp">    getHomeList() &#123;</span></span><br><span class="line"><span class="regexp">      dispatch(getHomeList())</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;)</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default connect(mapStateToProps, mapDispatchToProps)(Home)</span></span><br></pre></td></tr></table></figure>
+<p><a href="https://www.redux.org.cn/docs/advanced/AsyncActions.html" target="_blank" rel="noopener">更多关于redux的使用方法</a></p>
+<p>上述代码，在编写纯客户端渲染时，你已经非常了熟悉了，你会轻易的发现上述代码的逻辑</p>
+<ul>
+<li>1、组件渲染即将挂载时，调用<code>props.getHomeList()</code></li>
+<li>2、触发<code>store</code>内部的方法发起异步请求，获取数据渲染数据列表</li>
+</ul>
+<p>遗憾的是在服务端环境中<code>props.getHomeList()</code>压根不会被执行，众所周知<code>useEffect</code>在这里相当于<code>componentDidMount</code>生命周期，在服务端渲染时，是不会触发该生命周期的，那么异步请求更无从发起！</p>
+<p>React团队当然想到这个问题，因此提供了解决方案：<strong><a href="https://reactrouter.com/web/guides/server-rendering" target="_blank" rel="noopener">改造路由</a></strong></p>
+<p>通常来讲，编写Reaact应用的路由应该是如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;Route path=<span class="string">"/"</span> exact component=&#123;Home&#125;&gt;&lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">        &lt;Route path="/</span>login<span class="string">" exact component=&#123;Login&#125;&gt;&lt;/Route&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">)</span></span><br></pre></td></tr></table></figure>
+<p>但是为了服务端渲染，我们需要进行重构,改写成如下的数组格式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [</span><br><span class="line">    &#123;</span><br><span class="line">        path: <span class="string">'/'</span>,</span><br><span class="line">        exact: <span class="literal">true</span>,</span><br><span class="line">        component: Home,</span><br><span class="line">        loadData: Home.loadData, <span class="comment">// 服务端初始化数据</span></span><br><span class="line">        key: <span class="string">'home'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        path: <span class="string">'/login'</span>,</span><br><span class="line">        exact: <span class="literal">true</span>,</span><br><span class="line">        component: Login,</span><br><span class="line">        key: <span class="string">'login'</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>可以看到改写的路由中包含<code>loadData</code>属性</p>
+<p>喂！这个就是重点了，<code>loadData</code>将用于服务端渲染时提前执行，完成异步数据的获取，你也许好奇在<code>Home</code>组件如何编写<code>loadData</code>，实际上非常简单</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Home.js</span></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 将state映射到props</span></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">  name: state.home.name</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 将action方法映射到props</span></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> (&#123;</span><br><span class="line">    getHomeList() &#123;</span><br><span class="line">      dispatch(getHomeList())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">+ Home.loadData = <span class="function">(<span class="params">store</span>) =&gt;</span> &#123;</span><br><span class="line">+  <span class="keyword">return</span> store.dispatch(getHomeList())</span><br><span class="line">+ &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps, mapDispatchToProps)(Home)</span><br></pre></td></tr></table></figure>
+<p>由于返回的路由不再是<code>JSX</code>的形式，因此需要循环遍历如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 服务端</span></span><br><span class="line">&lt;StaticRouter location=&#123;req.path&#125; context=&#123;&#123;&#125;&#125;&gt;</span><br><span class="line">     &#123;routes.map(<span class="function"><span class="params">route</span> =&gt;</span> (</span><br><span class="line">      &lt;Route &#123;...route&#125; /&gt;</span><br><span class="line">     ))&#125;</span><br><span class="line">&lt;<span class="regexp">/StaticRouter&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 客户端</span></span><br><span class="line"><span class="regexp"> &lt;BrowserRouter&gt;</span></span><br><span class="line"><span class="regexp">    &#123;Routes.map(route =&gt; (</span></span><br><span class="line"><span class="regexp">     &lt;Route &#123;...route&#125; /</span>&gt;</span><br><span class="line">    ))&#125;</span><br><span class="line">&lt;<span class="regexp">/BrowserRouter&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>服务端预加载数据阶段比较特殊，我们需要监听每次请求的<code>req.path</code>来判断需要调用哪个组件的<code>loadData</code>方法</strong></p>
+<p><code>react-router-dom</code>提供了<code>matchPath</code>用来根据<code>req.path</code>找到具体的路由组件，如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; matchPath &#125;  <span class="keyword">from</span>  <span class="string">"react-router-dom"</span></span><br><span class="line"><span class="keyword">const</span> promises = [];</span><br><span class="line">routes.some(<span class="function"><span class="params">route</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> match = matchPath(req.path, route)</span><br><span class="line">  <span class="keyword">if</span> (match) promises.push(route.loadData(match))</span><br><span class="line">  <span class="keyword">return</span> match</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 异步请求已完成 可以渲染组件 下发到客户端</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>如果你的路由包含了嵌套路由，也就是多层级路由，如下所示，<code>matchPath</code>方法将无法识别</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    component: Root,</span><br><span class="line">    routes: [</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">"/"</span>,</span><br><span class="line">        exact: <span class="literal">true</span>,</span><br><span class="line">        component: Home</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        path: <span class="string">"/child/:id"</span>,</span><br><span class="line">        component: Child,</span><br><span class="line">        routes: [</span><br><span class="line">          &#123;</span><br><span class="line">            path: <span class="string">"/child/:id/grand-child"</span>,</span><br><span class="line">            component: GrandChild</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>因此需要额外使用第三方库<code>react-router-config</code>提供的<code>matchRoutes</code>方可识别多层级的嵌套路由，具体使用方法请移步<a href="https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config" target="_blank" rel="noopener">react-router-config</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> match = matchRoutes(routes, req.path);</span><br><span class="line"><span class="comment">// using the routes shown earlier, this returns</span></span><br><span class="line"><span class="comment">// [</span></span><br><span class="line"><span class="comment">//   routes[0],</span></span><br><span class="line"><span class="comment">//   routes[0].routes[1]</span></span><br><span class="line"><span class="comment">// ]</span></span><br></pre></td></tr></table></figure>
+<p>到目前为止，我们解决了<strong>首屏渲染时服务器初始化数据</strong>这一“心腹大患”，解决了它，意味着我们的WEB应用将正常支持SEO</p>
+<p>但是还存在一个小小的问题，客户端未能同步到服务端的数据</p>
+<p><strong>仔细 回想一下，当我们在服务端初始化数据后，数据将会被存储在<code>store</code>中，但是在客户端应用是无法获取到这份数据，因为在客户端会重新创建新的<code>store</code>实例，毕竟二者处于不同的上下文环境中，由于二者的数据不一致，在渲染组件时，React会发现服务端渲染的内容与当前客户端的数据逻辑并不一致，往往控制台报诸如以下的错误，实际上就是内部的<code>diff</code>发现二者的<code>vnode</code>结构前后不一致</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Warning: Expected server HTML to contain a matching &lt;button&gt; <span class="keyword">in</span> &lt;div&gt;.</span><br><span class="line">Warning: Did not expect server HTML to contain a &lt;div&gt; <span class="keyword">in</span> &lt;div&gt;.</span><br></pre></td></tr></table></figure>
+<p>为此，我们需要将服务端获取的数据同步给客户端，答案就是在服务端下发的HTML增加以下内容</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> &lt;script&gt;</span><br><span class="line">     <span class="built_in">window</span>.context = &#123;</span><br><span class="line">    	state: $&#123;<span class="built_in">JSON</span>.stringify(store.getState())&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>并修改客户端创建<code>store</code>实例的代码，默认获取检查当前全局对象<code>window</code>中是否存在<code>context</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getClientStore = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> defaultState = <span class="built_in">window</span>.context ? <span class="built_in">window</span>.context.state : &#123;&#125;;</span><br><span class="line">    <span class="keyword">return</span> createStore(reducer, defaultState, applyMiddleware(thunk));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如此一来，就完成了服务端与客户端的数据同步，一个基本的SSR工程就已经初具雏形！</p>
+<p>总结：服务端数据的预加载是重中之重，实现起来其实并不麻烦，本质是都是利用<code>redux</code>充当数据层，Next.js也提供了类似的机制，其方法为<code>getInitialProps</code>,详情在<a href="https://nextjs.frontendx.cn/docs/#%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E4%BB%A5%E5%8F%8A%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F" target="_blank" rel="noopener">这里</a></p>
+<h2 id="请求代理"><a href="#请求代理" class="headerlink" title="请求代理"></a>请求代理</h2><p>使用Node.js服务端渲染时,会产生多渠道请求的问题，负责接口服务的A服务器需要接受来自Node.js服务器与浏览器客户端的请求，在定位问题时将会变得复杂许多，并且可能还会衍生出其他问题，因此可以将客户端请求通过代理的方式交给Node.js服务器进行转发</p>
+<ul>
+<li>将请求都集中于Node.js服务器上便于日后请求问题排查</li>
+<li>更充分的使用了Node.js的能力，毕竟仅仅用来做组件渲染有点浪费</li>
+<li>减轻了接口服务器的压力，方便日后业务的调整</li>
+</ul>
+<p>使用代理非常简单</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i express-http-proxy --save</span><br></pre></td></tr></table></figure>
+<p>这里以本地服务器为例（虚构）</p>
+<p>客户端请求<code>http://localhost/api/**</code>会被转发为<code>http://136.152.12.5/**</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">'/api'</span>, proxy(<span class="string">'http://admin.kuwanfront.cn'</span>, &#123;</span><br><span class="line">  proxyReqPathResolver(req) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(req.url)</span><br><span class="line">    <span class="keyword">return</span> req.url</span><br><span class="line">  &#125;</span><br><span class="line">&#125;))</span><br></pre></td></tr></table></figure>
+<p>区分客户端/服务端发送请求的根路径，利用<code>axios</code>提供的<code>instance</code>能力，配置不同的请求实例，将客户端的请求根路径<code>baseURL</code>设置为采用相对路径的形式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /client/request.js</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">"axios"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance = axios.create(&#123;</span><br><span class="line">    baseURL: <span class="string">'/'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /server/request.js</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">"axios"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance = axios.create(&#123;</span><br><span class="line">    baseURL: <span class="string">'http://admin.kuwanfront.cn'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> instance</span><br></pre></td></tr></table></figure>
+<p>现在面临的问题就是：<strong>如何在客户端与服务端请求时区分不同的Axios实例</strong>，通常来讲可以通过控制变量的形式来进行区分，但这种方式不仅使代码量增多，耦合且提高了项目维护的难度，因此我们可以需要寻求其他的方法优化工程代码</p>
+<p>得益于<code>redux-thunk</code>中间件提供的<code>withExtraArgument</code>方法，允许我们传入自定义参数，所以我们可以将客户端与服务端的<code>axios</code>实例以参数的形式传入，从根本上区分了实例的请求方法，并且代码逻辑清晰，不干涉请求方法内部逻辑，此为优解</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sotre/index.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware, combineReducers &#125; <span class="keyword">from</span> <span class="string">"redux"</span></span><br><span class="line"><span class="keyword">import</span> thunk <span class="keyword">from</span> <span class="string">'redux-thunk'</span></span><br><span class="line"><span class="keyword">import</span> &#123; reducer <span class="keyword">as</span> homeReducer &#125; <span class="keyword">from</span> <span class="string">"../components/Home/store/"</span></span><br><span class="line"><span class="keyword">import</span> clinetRequest <span class="keyword">from</span> <span class="string">"../client/request"</span></span><br><span class="line"><span class="keyword">import</span> serverRequest <span class="keyword">from</span> <span class="string">"../server/request"</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getStore = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> createStore(reducer, applyMiddleware(thunk.withExtraArgument(serverRequest)))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getClientStore = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> defaultState = <span class="built_in">window</span>.context ? <span class="built_in">window</span>.context.state : &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> createStore(reducer, defaultState, applyMiddleware(thunk.withExtraArgument(clinetRequest)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并在触发Redux的Aaction时，获取该实例<code>axiosInstance</code>调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// action.js</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getHomeList = <span class="function">(<span class="params">server</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">dispatch,getState,axiosInstance</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> axiosInstance.get(<span class="string">'default/getArticleList'</span>)</span><br><span class="line">            .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                dispatch(changeList(res.data.data))</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如此一来就合理的处理了客户端/服务端请求的<code>baseURL</code>不同的问题</p>
+<h2 id="异常与重定向"><a href="#异常与重定向" class="headerlink" title="异常与重定向"></a>异常与重定向</h2><blockquote>
+<p>接下来完善服务端的404和301重定向功能</p>
+</blockquote>
+<h3 id="服务端返回404状态码"><a href="#服务端返回404状态码" class="headerlink" title="服务端返回404状态码"></a>服务端返回404状态码</h3><p>新建<code>NotFound</code>组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NotFound.js</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> NotFound = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div&gt;<span class="number">404</span>&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default NotFound</span></span><br></pre></td></tr></table></figure>
+<p>修改路由,在识别不到具体路径时，调用该<code>NotFound</code>组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Routes.js</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">import</span> NotFound <span class="keyword">from</span> <span class="string">"./components/NotFound/index.js"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [&#123;</span><br><span class="line">    path: <span class="string">'/'</span>,</span><br><span class="line">    component: App,</span><br><span class="line">    routes: [</span><br><span class="line">       ...</span><br><span class="line">        &#123;</span><br><span class="line">            component: NotFound</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure>
+<p>服务端设置传入<code>context</code>字段</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server/index.js</span></span><br><span class="line">...</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> context = &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> html = render(store, routes, req, context)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>得益于<code>StaticRouter</code>组件提供的功能，我们可以在<code>NotFound</code>组件接收到<code>context</code>并创建<code>NOTFOUND</code>字段作为服务端识别404的状态</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> render = <span class="function">(<span class="params">store, routes, req, context</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = renderToString((</span><br><span class="line">        &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">             &lt;StaticRouter location=&#123;req.path&#125; context=&#123;context&#125;&gt;</span><br><span class="line">                &#123;renderRoutes(routes)&#125;</span><br><span class="line">            &lt;<span class="regexp">/StaticRouter&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>Provider&gt;</span><br><span class="line">    ))</span><br><span class="line">    <span class="keyword">const</span> html = <span class="string">`&lt;html&gt;</span></span><br><span class="line"><span class="string">        &lt;head&gt;</span></span><br><span class="line"><span class="string">          &lt;title&gt;ssr&lt;/title&gt;</span></span><br><span class="line"><span class="string">        &lt;/head&gt;</span></span><br><span class="line"><span class="string">        &lt;body&gt;</span></span><br><span class="line"><span class="string">          &lt;div id="root"&gt;<span class="subst">$&#123;content&#125;</span>&lt;/div&gt;</span></span><br><span class="line"><span class="string">          &lt;script&gt;</span></span><br><span class="line"><span class="string">            window.context = &#123;</span></span><br><span class="line"><span class="string">              state: <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(store.getState())&#125;</span></span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">          &lt;/script&gt;</span></span><br><span class="line"><span class="string">          &lt;script src="/index.js" &gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">        &lt;/body&gt;</span></span><br><span class="line"><span class="string">      &lt;/html&gt;</span></span><br><span class="line"><span class="string">        `</span></span><br><span class="line">    <span class="keyword">return</span> html</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NotFound.js</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> NotFound = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(props.staticContext) &#123;</span><br><span class="line">        props.staticContext.NOTFOUND = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div&gt;<span class="number">404</span>&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default NotFound</span></span><br></pre></td></tr></table></figure>
+<p>服务端返回404状态码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server/index.js</span></span><br><span class="line">...</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> context = &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> html = render(store, routes, req, context)</span><br><span class="line">    <span class="keyword">if</span>(context.NOTFOUND) &#123;</span><br><span class="line">      res.status(<span class="number">404</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      res.status(<span class="number">200</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>301重定向比较特殊，服务端的路由组件我们采用的是 <code>StaticRouter</code>组件进行嵌套处理</p>
+<p>因此当某个组件出现<code>react-router-dom</code>提供的<code>Redirect</code>组件时，<code>StaticRouter</code>组件会自动往<code>context</code>注入内容如下所示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Redirect &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Loign = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> test = <span class="literal">false</span></span><br><span class="line">  <span class="built_in">console</span>.log(test)</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    test ? </span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;div&gt;Loign&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">    :</span><br><span class="line">    &lt;Redirect </span><br><span class="line">      to=<span class="string">"/"</span></span><br><span class="line">    /&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Loign</span><br></pre></td></tr></table></figure>
+<p>在服务端中打印此时<code>context</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> context = &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> html = render(store, routes, req, context)</span><br><span class="line">    <span class="built_in">console</span>.log(context)</span><br><span class="line">    <span class="keyword">if</span>(context.NOTFOUND) &#123;</span><br><span class="line">      res.status(<span class="number">404</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      res.status(<span class="number">200</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>输出<code>context</code>内容，注意再强调一遍，这个操作是<code>StaticRouter</code>路由组件自动完成的，我们只需要坐享其成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  action: <span class="string">'REPLACE'</span>,</span><br><span class="line">  location: &#123; <span class="attr">pathname</span>: <span class="string">'/'</span>, <span class="attr">search</span>: <span class="string">''</span>, <span class="attr">hash</span>: <span class="string">''</span>, <span class="attr">state</span>: <span class="literal">undefined</span> &#125;,</span><br><span class="line">  url: <span class="string">'/'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">app.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> context = &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> html = render(store, routes, req, context)</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">if</span>(context.NOTFOUND) &#123;</span><br><span class="line">      res.status(<span class="number">404</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      res.status(<span class="number">200</span>)</span><br><span class="line">      res.send(html)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以知道，服务端组件在<code>StaticRouter</code>路由组件渲染时会被动态注入<code>staticContext</code>属性，凭借该属性我们可以设法完成特定的需求</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/26/Vue杂谈/" rel="next" title="Vue杂谈">
+                <i class="fa fa-chevron-left"></i> Vue杂谈
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/04/apply、call使用技巧/" rel="prev" title="apply、call使用技巧">
+                apply、call使用技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端渲染组件"><span class="nav-number">2.</span> <span class="nav-text">服务端渲染组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同构"><span class="nav-number">3.</span> <span class="nav-text">同构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端路由"><span class="nav-number">4.</span> <span class="nav-text">服务端路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据同步"><span class="nav-number">5.</span> <span class="nav-text">数据同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求代理"><span class="nav-number">6.</span> <span class="nav-text">请求代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常与重定向"><span class="nav-number">7.</span> <span class="nav-text">异常与重定向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端返回404状态码"><span class="nav-number">7.1.</span> <span class="nav-text">服务端返回404状态码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

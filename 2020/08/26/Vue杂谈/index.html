@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这算是一篇随笔吧，使用了Vue很长一段时间了，关于Vue的使用，网上有非常多的人做了非常全面到位的总结 但纸上得来终觉浅，今天以个人的视角点出自己常用的特性、常规的问题、底层原理以及Vue3.0的使用，但不会大篇幅贴代码，主要是提供一些思路">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue杂谈">
+<meta property="og:url" content="http://yoursite.com/2020/08/26/Vue杂谈/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="这算是一篇随笔吧，使用了Vue很长一段时间了，关于Vue的使用，网上有非常多的人做了非常全面到位的总结 但纸上得来终觉浅，今天以个人的视角点出自己常用的特性、常规的问题、底层原理以及Vue3.0的使用，但不会大篇幅贴代码，主要是提供一些思路">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-01-04T09:41:34.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue杂谈">
+<meta name="twitter:description" content="这算是一篇随笔吧，使用了Vue很长一段时间了，关于Vue的使用，网上有非常多的人做了非常全面到位的总结 但纸上得来终觉浅，今天以个人的视角点出自己常用的特性、常规的问题、底层原理以及Vue3.0的使用，但不会大篇幅贴代码，主要是提供一些思路">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/26/Vue杂谈/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Vue杂谈 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<link rel="stylesheet" href="/music/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/music/APlayer.min.js"></script>
+<script type="text/javascript" src="/music/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/26/Vue杂谈/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vue杂谈
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-26 17:43:44" itemprop="dateCreated datePublished" datetime="2020-08-26T17:43:44+08:00">2020-08-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-01-04 17:41:34" itemprop="dateModified" datetime="2021-01-04T17:41:34+08:00">2021-01-04</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这算是一篇随笔吧，使用了Vue很长一段时间了，关于Vue的使用，网上有非常多的人做了非常全面到位的总结</p>
+<p>但纸上得来终觉浅，今天以个人的视角点出自己常用的特性、常规的问题、底层原理以及Vue3.0的使用，但不会大篇幅贴代码，主要是提供一些思路</p>
+<a id="more"></a>
+<h2 id="高阶特性"><a href="#高阶特性" class="headerlink" title="高阶特性"></a>高阶特性</h2><h3 id="自定义v-model"><a href="#自定义v-model" class="headerlink" title="自定义v-model"></a>自定义v-model</h3><blockquote>
+<p>允许一个自定义组件在使用v-model时，定制prop和event，v-model会把value用作prop且把input用作event</p>
+<p>有一个业务场景比较适合，那就是需要以value值用于变更状态的单选框及复选框时，可以采用model选项来规避一些冲突问题</p>
+</blockquote>
+<p>父组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;CustomVModel v-model=&quot;name&quot;&gt;&lt;/CustomVModel&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">import CustomVModel from &apos;./CustomVModel.vue&apos;</span><br><span class="line">export default &#123;</span><br><span class="line">   data () &#123;</span><br><span class="line">       return </span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>子组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;input type=&quot;text&quot; </span><br><span class="line">           :value=&quot;text&quot;</span><br><span class="line">           #input=&quot;$emit(&apos;change&apos;, $event.target.value)&quot;</span><br><span class="line">           &gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    name: &apos;CustomVModel&apos;,</span><br><span class="line">    model: &#123;</span><br><span class="line">        prop: &apos;text&apos;,</span><br><span class="line">        ebent: &apos;change&apos;</span><br><span class="line">    &#125;,</span><br><span class="line">    props: &#123;</span><br><span class="line">        text: &#123;</span><br><span class="line">            type: String,</span><br><span class="line">            default () &#123;</span><br><span class="line">                return &apos;&apos;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="nextTick"><a href="#nextTick" class="headerlink" title="$nextTick"></a>$nextTick</h3><blockquote>
+<p>将回调延迟到下次DOM更新后触发执行，好处就是可以获取最新的DOM节点，支持Promise</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="forceUpdate"><a href="#forceUpdate" class="headerlink" title="$forceUpdate"></a>$forceUpdate</h3><p>这个API给我留下了很深刻的印象是之前在使用ElementUI的表单组件时，当我动态更新该表单组件的依赖数据时，我发现该组件没有任何变化，我猜测是因为该组件内部无法监听到数据的响应变化，众所周知，Vue2.X采用的是Object.defineproperty对数据变化进行监听，但是这种监听行为对于新增的属性是无法感知，因此Vue提供了$forceUpdate来迫使组件强制更新渲染，不得不说实在是没有办法中的办法，期待Vue3.0的proxy完美处理该问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$forceUpdate()</span><br></pre></td></tr></table></figure>
+<h3 id="动态组件与异步组件"><a href="#动态组件与异步组件" class="headerlink" title="动态组件与异步组件"></a>动态组件与异步组件</h3><blockquote>
+<p>所谓动态组件，即是通过:is绑定变量的行为，来实现动态加载组件的行为</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;component :is=&quot;name&quot;&gt;&lt;/component&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>所谓异步组件，即是当页面中，包含了复杂度较高的组件时，为了保证渲染的性能问题，通常可以采用异步加载组件的方式来提示页面的性能</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    components: &#123;</span><br><span class="line">        CustomComponent: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./CustomComponent.vue'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此异步非彼异步，异步组件的原理与JavaScript中的异步特性无关，二者不可混淆</p>
+<p>本质上，即是在引用组件时，采用函数包裹的形式然后在函数体中再去import组件，Vue会识别这种行为，将该组件的代码进行分割处理，只有在触发该组件时，通过动态加载新的js的形式获取该组件，以此提升了页面的整体响应效率</p>
+<h3 id="keep-alive"><a href="#keep-alive" class="headerlink" title="keep-alive"></a>keep-alive</h3><blockquote>
+<p>keep-alive是Vue内置组件，其功能是用于缓存组件，在面对需要频繁切换，但却无需重新渲染的业务场景下，应直接使用它</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;keep-alive&gt;</span><br><span class="line">	&lt;comA&gt;&lt;/comA&gt;</span><br><span class="line">&lt;/keep-alive&gt;</span><br></pre></td></tr></table></figure>
+<p>其使用非常简单，只需将需要缓存的组件进行包裹即可，当被keep-alive组件包裹时，其内的组件，在变更状态时，不会触发destory生命周期，即组件不会进行销毁，反而是以缓存的形式，存在于内存中，方便下次直接使用</p>
+<h3 id="Mixin"><a href="#Mixin" class="headerlink" title="Mixin"></a>Mixin</h3><blockquote>
+<p>抽离组件的公共逻辑，进而复用到每个组件中</p>
+</blockquote>
+<p>老实说，这个API我是在一次处理多个组件有相同逻辑的时候发现的，复制粘贴过于痛苦，只好跑去研究Vue文档，突然发现一段话：<strong>全局混入，组件的自定义行为</strong>，灵光一闪，果然是我想要的东西！</p>
+<p>实际上，mixin就是通过导出一个用于混入到Vue组件实例中的对象，被混入的组件会一同执行mixin包含的处理逻辑，最重要的一点就是，注意，它们并不是分而治之的，其中的函数和变量是可以互相使用的，这就是mixin发挥的威力</p>
+<p>很多框架/库，有用到这个特性，但是这种写法也带来了一些问题</p>
+<ul>
+<li>变量阅读性差，寻找来源变得困难</li>
+<li>多个mixin会造成命名重复，变量冲突的问题</li>
+<li>mixin和组件会出现多对多的关系，导致组件复杂度较高</li>
+</ul>
+<p>为了处理这个问题，Vue3.0推出了Compositon API 解决了这些问题</p>
+<h2 id="原理剖析"><a href="#原理剖析" class="headerlink" title="原理剖析"></a>原理剖析</h2><h3 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h3><p>使用现代化前端框架，组件的思维将贯穿整个应用</p>
+<p>开发者将重复用到得逻辑进行封装复用后，将其称之为组件，组件最重要得功能就是复用，根据业务需求对组件进行拆分和合并，如同搭积木般得堆砌我们得应用</p>
+<p>早期的Web，通常采用后端下发页面的形式，也就是服务渲染的技术，而通常服务端渲染采用的都是模板渲染的方式，因为网页的结构行为是具备一致性的，因此早期的模板渲染就是组件化的使用</p>
+<p>比如在egg.js中采用<code>nunjucks</code>模板引擎插件组织模板</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123; <span class="attr">name</span>: <span class="string">'egg'</span> &#125;</span><br><span class="line">ctx.render(<span class="string">'home/index.tpl'</span>, data)</span><br></pre></td></tr></table></figure>
+<p>随之前端应用的日趋复杂，服务端渲染已不够满足需求，越来越多的业务需求必须交由前端完成，因此前端诞生了自己的组件化行为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=&quot;app&quot;&gt;</span><br><span class="line">     &lt;HelloWorld msg=&quot;Hello Vue 3.0 + Vite&quot; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<p>而前端组件化与后端组件化的最大区别就是：<strong>数据驱动视图</strong></p>
+<h3 id="数据劫持"><a href="#数据劫持" class="headerlink" title="数据劫持"></a>数据劫持</h3><p>Vue提供了一系列Options API，其中<code>data</code>就是负责提供数据被<code>vm</code>进行<strong>响应式处理</strong>，也就是<strong>数据劫持</strong></p>
+<p>Vue2.x：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重新定义数组原型</span></span><br><span class="line"><span class="keyword">const</span> oldArrayProperty = <span class="built_in">Array</span>.prototype</span><br><span class="line"><span class="comment">// 创建新对象，原型指向 oldArrayProperty ，再扩展新的方法不会影响原型</span></span><br><span class="line"><span class="keyword">const</span> arrProto = <span class="built_in">Object</span>.create(oldArrayProperty);</span><br><span class="line">[   <span class="string">'push'</span>,</span><br><span class="line">    <span class="string">'pop'</span>,</span><br><span class="line">    <span class="string">'shift'</span>,</span><br><span class="line">    <span class="string">'unshift'</span>,</span><br><span class="line">    <span class="string">'splice'</span>,</span><br><span class="line">    <span class="string">'sort'</span>,</span><br><span class="line">    <span class="string">'reverse'</span></span><br><span class="line">].forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 劫持数组对象的方法响应数据</span></span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(arrProto, item, &#123;</span><br><span class="line">        value () &#123;</span><br><span class="line">            updateView()</span><br><span class="line">            <span class="keyword">var</span> original = oldArrayProperty[item]</span><br><span class="line">            original.call(<span class="keyword">this</span>, ...arguments)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 视图更新函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateView</span>(<span class="params">key = <span class="string">'key'</span>, value = <span class="number">0</span></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(key + <span class="string">' is update value as '</span> + value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 劫持对象属性 响应数据变化</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span>(<span class="params">target, key, value</span>) </span>&#123;</span><br><span class="line">    observer(value)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(target, key, &#123;</span><br><span class="line">        <span class="keyword">get</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">set</span>(newValue) &#123;</span><br><span class="line">            <span class="keyword">if</span> (newValue !== value) &#123;</span><br><span class="line">                observer(value)</span><br><span class="line">                value = newValue</span><br><span class="line">                updateView(key, value)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">observer</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> target !== <span class="string">'object'</span> || target === <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> target</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(target)) &#123;</span><br><span class="line">        target.__proto__ = arrProto</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (key <span class="keyword">in</span> target) &#123;</span><br><span class="line">        defineReactive(target, key, target[key])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    name: <span class="string">'li'</span>,</span><br><span class="line">    age: <span class="number">20</span>,</span><br><span class="line">    info: &#123;</span><br><span class="line">        title: <span class="string">'student'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    nums: [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">observer(data)</span><br></pre></td></tr></table></figure>
+<p>通过<strong>Object.defineproperty</strong>可以完成对<code>data</code>属性的监听，但是这个API存在几个缺陷</p>
+<p>1、是无法深度监听，一旦存在复合类型的数据（对象），就必须通过递归重复劫持，这一步是性能瓶颈</p>
+<p>2、无法监听<code>data</code>内部属性的增删，因此Vue提供了<code>Vue.set</code>，<code>Vue.delete</code></p>
+<p>3、无法监听数组对象，需要通过重写数组方法的方式，才能感知数组的操作行为</p>
+<p>Vue3:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateView</span>(<span class="params">key, value</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(key + <span class="string">' is update value as '</span> + value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span>(<span class="params">target, key, value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> P = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, &#123;</span><br><span class="line">        <span class="keyword">get</span> (obj, props) &#123;</span><br><span class="line">            <span class="keyword">return</span>  obj[props]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">set</span> (obj, prop, value) &#123;</span><br><span class="line">            <span class="keyword">let</span> oldValue = obj[prop]</span><br><span class="line">            <span class="keyword">if</span>(oldValue !== value) &#123;</span><br><span class="line">                obj[prop] = value</span><br><span class="line">                updateView(prop, value)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> P </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">observer</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> target !== <span class="string">'object'</span> || target === <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 不是对象或数组</span></span><br><span class="line">        <span class="keyword">return</span> target</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> defineReactive(target)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    name: <span class="string">'li'</span>,</span><br><span class="line">    age: <span class="number">20</span>,</span><br><span class="line">    info: &#123;</span><br><span class="line">        title: <span class="string">'student'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    nums: [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxyData = observer(data)</span><br></pre></td></tr></table></figure>
+<p>Vue3采用了<strong>new Proxy</strong>，通过代理对象捕获目标的操作行为(属性查找、赋值、枚举、函数调用)</p>
+<p>相比于<strong>Object.defineproperty</strong>具备更完善的对象操作机制，弥补了之前的不足</p>
+<p>不管是哪个版本也好，总之有了<strong>数据劫持</strong>，<strong>数据驱动视图</strong>才有了可能</p>
+<h3 id="虚拟DOM-Virtual-DOM"><a href="#虚拟DOM-Virtual-DOM" class="headerlink" title="虚拟DOM(Virtual DOM)"></a>虚拟DOM(Virtual DOM)</h3><p>感知了数据的变化，意味着DOM需要重新的生成和渲染，然而操作DOM是一件十分消耗性能的事情，大量的HTML5规范和DOM事件使得创建DOM的代价十分昂贵，于是<strong>虚拟DOM(Virtual DOM)</strong>便应运而生了</p>
+<p>所谓的<strong>虚拟DOM(Virtual DOM)</strong>就是将HTML抽象为JavaScript对象，也即是AST抽象语法树，再通过<strong>diff算法</strong>对比树前后的变化，进行DOM操作，而无需更新整个视图</p>
+<p><strong>虚拟DOM(Virtual DOM)</strong>是当代前端跨平台的基石，不论是在跨端小程序还是移动端开发(React Native,Weex)都是因为它而诞生的，其中的<strong>diff算法</strong>更是核心部分</p>
+<p>Vue的<code>vnode</code>最初是基于<a href="https://github.com/snabbdom/snabbdom" target="_blank" rel="noopener">snabbdom</a>实现的，通过官方给出的示例，可以一窥<strong>diff</strong>的过程</p>
+<p>使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; init &#125; <span class="keyword">from</span> <span class="string">'snabbdom/init'</span></span><br><span class="line"><span class="keyword">import</span> &#123; classModule &#125; <span class="keyword">from</span> <span class="string">'snabbdom/modules/class'</span></span><br><span class="line"><span class="keyword">import</span> &#123; propsModule &#125; <span class="keyword">from</span> <span class="string">'snabbdom/modules/props'</span></span><br><span class="line"><span class="keyword">import</span> &#123; styleModule &#125; <span class="keyword">from</span> <span class="string">'snabbdom/modules/style'</span></span><br><span class="line"><span class="keyword">import</span> &#123; eventListenersModule &#125; <span class="keyword">from</span> <span class="string">'snabbdom/modules/eventlisteners'</span></span><br><span class="line"><span class="keyword">import</span> &#123; h &#125; <span class="keyword">from</span> <span class="string">'snabbdom/h'</span> <span class="comment">// helper function for creating vnodes</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> patch = init([ <span class="comment">// Init patch function with chosen modules</span></span><br><span class="line">  classModule, <span class="comment">// makes it easy to toggle classes</span></span><br><span class="line">  propsModule, <span class="comment">// for setting properties on DOM elements</span></span><br><span class="line">  styleModule, <span class="comment">// handles styling on elements with support for animations</span></span><br><span class="line">  eventListenersModule, <span class="comment">// attaches event listeners</span></span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> container = <span class="built_in">document</span>.getElementById(<span class="string">'container'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> vnode = h(<span class="string">'div#container.two.classes'</span>, &#123; <span class="attr">on</span>: &#123; <span class="attr">click</span>: someFn &#125; &#125;, [</span><br><span class="line">  h(<span class="string">'span'</span>, &#123; <span class="attr">style</span>: &#123; <span class="attr">fontWeight</span>: <span class="string">'bold'</span> &#125; &#125;, <span class="string">'This is bold'</span>),</span><br><span class="line">  <span class="string">' and this is just normal text'</span>,</span><br><span class="line">  h(<span class="string">'a'</span>, &#123; <span class="attr">props</span>: &#123; <span class="attr">href</span>: <span class="string">'/foo'</span> &#125; &#125;, <span class="string">'I\'ll take you places!'</span>)</span><br><span class="line">])</span><br><span class="line"><span class="comment">// Patch into empty DOM element – this modifies the DOM as a side effect</span></span><br><span class="line">patch(container, vnode)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> newVnode = h(<span class="string">'div#container.two.classes'</span>, &#123; <span class="attr">on</span>: &#123; <span class="attr">click</span>: anotherEventHandler &#125; &#125;, [</span><br><span class="line">  h(<span class="string">'span'</span>, &#123; <span class="attr">style</span>: &#123; <span class="attr">fontWeight</span>: <span class="string">'normal'</span>, <span class="attr">fontStyle</span>: <span class="string">'italic'</span> &#125; &#125;, <span class="string">'This is now italic type'</span>),</span><br><span class="line">  <span class="string">' and this is still just normal text'</span>,</span><br><span class="line">  h(<span class="string">'a'</span>, &#123; <span class="attr">props</span>: &#123; <span class="attr">href</span>: <span class="string">'/bar'</span> &#125; &#125;, <span class="string">'I\'ll take you places!'</span>)</span><br><span class="line">])</span><br><span class="line"><span class="comment">// Second `patch` invocation</span></span><br><span class="line">patch(vnode, newVnode) <span class="comment">// Snabbdom efficiently updates the old view to the new state</span></span><br></pre></td></tr></table></figure>
+<p>源码：</p>
+<p>可以看到<code>h</code>函数会返回<code>vnode</code>，最终交由<code>pathch</code>函数进行处理</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patch</span> (<span class="params">oldVnode: VNode | Element, vnode: VNode</span>): <span class="title">VNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> i: <span class="built_in">number</span>, elm: Node, parent: Node</span><br><span class="line">    <span class="keyword">const</span> insertedVnodeQueue: VNodeQueue = []</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cbs.pre.length; ++i) cbs.pre[i]()</span><br><span class="line">	<span class="comment">// 不是vnode则创建空vnode</span></span><br><span class="line">    <span class="keyword">if</span> (!isVnode(oldVnode)) &#123;</span><br><span class="line">        oldVnode = emptyNodeAt(oldVnode)</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 相同vnode直接比较</span></span><br><span class="line">    <span class="keyword">if</span> (sameVnode(oldVnode, vnode)) &#123;</span><br><span class="line">        patchVnode(oldVnode, vnode, insertedVnodeQueue)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 不同vnode则删除重建</span></span><br><span class="line">        elm = oldVnode.elm!</span><br><span class="line">        parent = api.parentNode(elm) <span class="keyword">as</span> Node</span><br><span class="line">        createElm(vnode, insertedVnodeQueue)</span><br><span class="line">        <span class="keyword">if</span> (parent !== <span class="literal">null</span>) &#123;</span><br><span class="line">            api.insertBefore(parent, vnode.elm!, api.nextSibling(elm))</span><br><span class="line">            removeVnodes(parent, [oldVnode], <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">return</span> vnode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>patchVnode</code>会根据新旧<code>vnode</code>的<code>children</code>进行增删改行为</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">patchVnode</span> (<span class="params">oldVnode: VNode, vnode: VNode, insertedVnodeQueue: VNodeQueue</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 获取vnode的hook</span></span><br><span class="line">    <span class="keyword">const</span> hook = vnode.data?.hook</span><br><span class="line">    <span class="comment">// 若存在则执行</span></span><br><span class="line">    hook?.prepatch?.(oldVnode, vnode)</span><br><span class="line">    <span class="comment">// 获取挂载容器</span></span><br><span class="line">    <span class="keyword">const</span> elm = vnode.elm = oldVnode.elm!</span><br><span class="line">    <span class="comment">// 获取旧子节点</span></span><br><span class="line">    <span class="keyword">const</span> oldCh = oldVnode.children <span class="keyword">as</span> VNode[]</span><br><span class="line">    <span class="comment">// 获取新子节点</span></span><br><span class="line">    <span class="keyword">const</span> ch = vnode.children <span class="keyword">as</span> VNode[]</span><br><span class="line">    <span class="keyword">if</span> (oldVnode === vnode) <span class="keyword">return</span></span><br><span class="line">    <span class="comment">// hook相关</span></span><br><span class="line">    <span class="keyword">if</span> (vnode.data !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)</span><br><span class="line">      vnode.data.hook?.update?.(oldVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 主流程</span></span><br><span class="line">    <span class="keyword">if</span> (isUndef(vnode.text)) &#123;</span><br><span class="line">       <span class="comment">// 新旧vnode children存在且不一致 更新vnode </span></span><br><span class="line">      <span class="keyword">if</span> (isDef(oldCh) &amp;&amp; isDef(ch)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue)</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(ch)) &#123;</span><br><span class="line">        <span class="comment">// 如果旧vnode没有children，新vnode有，清空text</span></span><br><span class="line">        <span class="keyword">if</span> (isDef(oldVnode.text)) api.setTextContent(elm, <span class="string">''</span>)</span><br><span class="line">        <span class="comment">// 添加children</span></span><br><span class="line">        addVnodes(elm, <span class="literal">null</span>, ch, <span class="number">0</span>, ch.length - <span class="number">1</span>, insertedVnodeQueue)</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldCh)) &#123;</span><br><span class="line">        <span class="comment">// 如果旧vnode有children 新vnode没有 直接删除</span></span><br><span class="line">        removeVnodes(elm, oldCh, <span class="number">0</span>, oldCh.length - <span class="number">1</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldVnode.text)) &#123;</span><br><span class="line">        api.setTextContent(elm, <span class="string">''</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVnode.text !== vnode.text) &#123;</span><br><span class="line">      <span class="comment">// 移除旧vnode childeren </span></span><br><span class="line">      <span class="keyword">if</span> (isDef(oldCh)) &#123;</span><br><span class="line">        removeVnodes(elm, oldCh, <span class="number">0</span>, oldCh.length - <span class="number">1</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 设置新的text</span></span><br><span class="line">      api.setTextContent(elm, vnode.text!)</span><br><span class="line">    &#125;</span><br><span class="line">    hook?.postpatch?.(oldVnode, vnode)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码中，如果新旧<code>vnode</code>不一致，就会通过<code>updateChildren</code>进行比较更新</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateChildren</span> (<span class="params">parentElm: Node,</span></span></span><br><span class="line"><span class="function"><span class="params">    oldCh: VNode[], <span class="comment">// 旧vnode</span></span></span></span><br><span class="line"><span class="function"><span class="params">    newCh: VNode[], <span class="comment">// 新vnode</span></span></span></span><br><span class="line"><span class="function"><span class="params">    insertedVnodeQueue: VNodeQueue</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> oldStartIdx = <span class="number">0</span> <span class="comment">// 旧vnode 起始指针</span></span><br><span class="line">    <span class="keyword">let</span> newStartIdx = <span class="number">0</span>  <span class="comment">// 新vnode 起始指针</span></span><br><span class="line">    <span class="keyword">let</span> oldEndIdx = oldCh.length - <span class="number">1</span> <span class="comment">// 旧vnode 结束指针</span></span><br><span class="line">    <span class="keyword">let</span> oldStartVnode = oldCh[<span class="number">0</span>] <span class="comment">// 旧vnode 首个节点</span></span><br><span class="line">    <span class="keyword">let</span> oldEndVnode = oldCh[oldEndIdx] <span class="comment">// 旧vnode 最后节点</span></span><br><span class="line">    <span class="keyword">let</span> newEndIdx = newCh.length - <span class="number">1</span> <span class="comment">// 新vnode 结束指针</span></span><br><span class="line">    <span class="keyword">let</span> newStartVnode = newCh[<span class="number">0</span>] <span class="comment">// 新vnode 首个节点</span></span><br><span class="line">    <span class="keyword">let</span> newEndVnode = newCh[newEndIdx]  <span class="comment">// 新vnode 最后节点</span></span><br><span class="line">    <span class="keyword">let</span> oldKeyToIdx: KeyToIndexMap | <span class="literal">undefined</span> <span class="comment">// key的部分</span></span><br><span class="line">    <span class="keyword">let</span> idxInOld: <span class="built_in">number</span></span><br><span class="line">    <span class="keyword">let</span> elmToMove: VNode</span><br><span class="line">    <span class="keyword">let</span> before: <span class="built_in">any</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (oldStartIdx &lt;= oldEndIdx &amp;&amp; newStartIdx &lt;= newEndIdx) &#123;</span><br><span class="line">       <span class="keyword">while</span> (oldStartIdx &lt;= oldEndIdx &amp;&amp; newStartIdx &lt;= newEndIdx) &#123;</span><br><span class="line">          <span class="keyword">if</span> (oldStartVnode == <span class="literal">null</span>) &#123;</span><br><span class="line">            oldStartVnode = oldCh[++oldStartIdx] <span class="comment">// Vnode might have been moved left</span></span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldEndVnode == <span class="literal">null</span>) &#123;</span><br><span class="line">            oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (newStartVnode == <span class="literal">null</span>) &#123;</span><br><span class="line">            newStartVnode = newCh[++newStartIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (newEndVnode == <span class="literal">null</span>) &#123;</span><br><span class="line">            newEndVnode = newCh[--newEndIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newStartVnode)) &#123;</span><br><span class="line">            patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">            oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">            newStartVnode = newCh[++newStartIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newEndVnode)) &#123;</span><br><span class="line">            patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">            oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">            newEndVnode = newCh[--newEndIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldStartVnode, newEndVnode)) &#123; <span class="comment">// Vnode moved right</span></span><br><span class="line">            patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)</span><br><span class="line">            api.insertBefore(parentElm, oldStartVnode.elm!, api.nextSibling(oldEndVnode.elm!))</span><br><span class="line">            oldStartVnode = oldCh[++oldStartIdx]</span><br><span class="line">            newEndVnode = newCh[--newEndIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sameVnode(oldEndVnode, newStartVnode)) &#123; <span class="comment">// Vnode moved left</span></span><br><span class="line">            patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)</span><br><span class="line">            api.insertBefore(parentElm, oldEndVnode.elm!, oldStartVnode.elm!)</span><br><span class="line">            oldEndVnode = oldCh[--oldEndIdx]</span><br><span class="line">            newStartVnode = newCh[++newStartIdx]</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (oldKeyToIdx === <span class="literal">undefined</span>) &#123;</span><br><span class="line">              oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)</span><br><span class="line">            &#125;</span><br><span class="line">            idxInOld = oldKeyToIdx[newStartVnode.key <span class="keyword">as</span> <span class="built_in">string</span>]</span><br><span class="line">            <span class="keyword">if</span> (isUndef(idxInOld)) &#123; <span class="comment">// New element</span></span><br><span class="line">              api.insertBefore(parentElm, createElm(newStartVnode, insertedVnodeQueue), oldStartVnode.elm!)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              elmToMove = oldCh[idxInOld]</span><br><span class="line">              <span class="keyword">if</span> (elmToMove.sel !== newStartVnode.sel) &#123;</span><br><span class="line">                api.insertBefore(parentElm, createElm(newStartVnode, insertedVnodeQueue), oldStartVnode.elm!)</span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                patchVnode(elmToMove, newStartVnode, insertedVnodeQueue)</span><br><span class="line">                oldCh[idxInOld] = <span class="literal">undefined</span> <span class="keyword">as</span> <span class="built_in">any</span></span><br><span class="line">                api.insertBefore(parentElm, elmToMove.elm!, oldStartVnode.elm!)</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newStartVnode = newCh[++newStartIdx]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    	...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><code>updateChildren</code>引入了<strong>两端对比</strong>的，核心就是内部会分别为新旧vnode，创建起始和结束的指针索引，以此对各个节点进行判断，通过<code>sameVnode</code>遇到本轮相同的则通过<code>patchVnode</code>函数递归处理，最终满足循环结束条件时，也意味着完成了对所有新旧<code>vode</code>的对比和更新</p>
+<p><strong>注意</strong> ：<code>sameVnode</code>函数在判定vnode相等时，通过<code>key</code>与<code>sel</code>是一个快速高效的方式，这也是面试官常问你的一个问题：<strong>v-for循环里的key有什么用处？</strong></p>
+<p>答：通过key可以确认<code>vnode</code>中的<code>children</code>相同的项，因此一旦发生变化只需移动插入到新的位置即可，若无key则需要销毁重建</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sameVnode</span> (<span class="params">vnode1: VNode, vnode2: VNode</span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> vnode1.key === vnode2.key &amp;&amp; vnode1.sel === vnode2.sel</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>以上的diff算法过程也可在Vue2.X的vue.common.dev.js查找到类似源码</strong></p>
+<h3 id="模板编译"><a href="#模板编译" class="headerlink" title="模板编译"></a>模板编译</h3><p>前面提到了<strong>虚拟DOM(Virtual DOM)</strong>是由HTML转换而来的JavaScript对象</p>
+<p>更确切的说应该是编写组件时的<strong>模板（template）</strong>转换而来，模板包含了许多指令、插值、JS表达式，但是本身只是Vue提供的自定义语法罢了</p>
+<p>因此需要经过Vue内置的<a href="https://github.com/vuejs/vue/blob/dev/packages/vue-template-compiler" target="_blank" rel="noopener">vue-tempalte-compiler</a>进行模板编译</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> render = <span class="built_in">require</span>(<span class="string">'vue-template-compiler'</span>)</span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`&lt;div&gt;&#123;&#123;v ? 1 : 2&#125;&#125;&lt;img :src="url" /&gt;&lt;/div&gt;`</span></span><br><span class="line"><span class="keyword">const</span> result = render.compile(template)</span><br><span class="line"><span class="built_in">console</span>.log(result)</span><br></pre></td></tr></table></figure>
+<p>结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ast: &#123;</span><br><span class="line">    type: <span class="number">1</span>,</span><br><span class="line">    tag: <span class="string">'div'</span>,</span><br><span class="line">    attrsList: [],</span><br><span class="line">    attrsMap: &#123;&#125;,</span><br><span class="line">    rawAttrsMap: &#123;&#125;,</span><br><span class="line">    parent: <span class="literal">undefined</span>,</span><br><span class="line">    children: [ [<span class="built_in">Object</span>], [<span class="built_in">Object</span>] ],</span><br><span class="line">    plain: <span class="literal">true</span>,</span><br><span class="line">    <span class="keyword">static</span>: <span class="literal">false</span>,</span><br><span class="line">    staticRoot: <span class="literal">false</span></span><br><span class="line">  &#125;,</span><br><span class="line">  render: <span class="string">`with(this)&#123;return _c('div',[_v("\\n    "+_s(v ? 1 : 2)+"\\n    "),_c('img',&#123;attrs:&#123;"src":url&#125;&#125;)])&#125;`</span>,</span><br><span class="line">  staticRenderFns: [],</span><br><span class="line">  errors: [],</span><br><span class="line">  tips: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以发现经过模板编译后返回了一个<strong>AST对象</strong>实际上就是将模板抽象为JavaScript对象的一种描述性结构，其中的<code>render</code>函数调用了许多Vue内置函数，比如<code>_c</code>，<strong>实际上就是<code>createElement</code>用于生成vnode</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/core/instance/render.js:31 </span></span><br><span class="line">vm._c = <span class="function">(<span class="params">a, b, c, d</span>) =&gt;</span> createElement(vm, a, b, c, d, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /src/core/vdom/create-element.js:28</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElement</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  context: Component,</span></span></span><br><span class="line"><span class="function"><span class="params">  tag: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  data: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  children: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  normalizationType: any,</span></span></span><br><span class="line"><span class="function"><span class="params">  alwaysNormalize: boolean</span></span></span><br><span class="line"><span class="function"><span class="params"></span>): <span class="title">VNode</span> | <span class="title">Array</span>&lt;<span class="title">VNode</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(data) || isPrimitive(data)) &#123;</span><br><span class="line">    normalizationType = children</span><br><span class="line">    children = data</span><br><span class="line">    data = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (isTrue(alwaysNormalize)) &#123;</span><br><span class="line">    normalizationType = ALWAYS_NORMALIZE</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _createElement(context, tag, data, children, normalizationType)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模板编译的根本目的就是为了得到<code>render</code>函数，用以完成渲染，而实际上，我们可以完全跳出模板这一步，直接调用<code>render</code>函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'anchored-heading'</span>, &#123;</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span> (<span class="params">createElement</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> createElement(</span><br><span class="line">      <span class="string">'h'</span> + <span class="keyword">this</span>.level,   <span class="comment">// 标签名称</span></span><br><span class="line">      <span class="keyword">this</span>.$slots.default <span class="comment">// 子节点数组</span></span><br><span class="line">    )</span><br><span class="line">  &#125;,</span><br><span class="line">  props: &#123;</span><br><span class="line">    level: &#123;</span><br><span class="line">      type: <span class="built_in">Number</span>,</span><br><span class="line">      required: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以看到我们可以通过自己调用<code>render</code>函数的方式来渲染组件，但是在实际开发中，我们需要可读的，直观的模板来提升我们的开发效率，因此才有了模板编译这一过程</p>
+<h3 id="组件渲染-更新的过程"><a href="#组件渲染-更新的过程" class="headerlink" title="组件渲染/更新的过程"></a>组件渲染/更新的过程</h3><p>组件在渲染分为初次渲染与更新渲染</p>
+<ul>
+<li>初次渲染<ul>
+<li>模板编译，获取<code>render</code>函数</li>
+<li>绑定响应式更新，监听<code>data</code>属性中的<code>getter</code>和<code>setter</code></li>
+<li>执行<code>render</code>函数，生成<code>vnode</code>，执行<code>patch(null, vnode)</code></li>
+</ul>
+</li>
+<li>更新渲染<ul>
+<li>修改<code>data</code>，触发<code>setter</code></li>
+<li>重新执行<code>render</code>函数，生产<code>newVnode</code></li>
+<li>通过<code>path(vnode,newVnode)</code>进行<code>diff</code>算法计算出差异  </li>
+</ul>
+</li>
+</ul>
+<p>异步渲染</p>
+<p>Vue组件是采用异步渲染的，因此在组件的方法内需要获取异步渲染后的组件元素，需要通过<strong>$nextTick</strong>方法来获取，这是因为Vue会汇总当前<code>data</code>的变化，一次性的更新视图，减少DOM的操作次数，提高性能</p>
+<h2 id="面试常规"><a href="#面试常规" class="headerlink" title="面试常规"></a>面试常规</h2><p>MVC、MVP与MVVM</p>
+<p>为了应对日益复杂的应用必须采用清晰合理的架构来保证组件的开发和维护，<strong>MVC(Model-View-Controller)</strong>是最常见的架构之一</p>
+<p><strong>MVC</strong>严格遵循三个部分</p>
+<ul>
+<li>视图（View）</li>
+<li>控制器（Controller）</li>
+<li>模型（Model）</li>
+</ul>
+<p>其中的通信流程为</p>
+<ul>
+<li>View负责传送（触发）指令（事件）到Controller</li>
+<li>Controller接收的指令后，执行相应的业务逻辑，变更Model中的数据</li>
+<li>Model将新的数据发送给View，用户得到反馈</li>
+</ul>
+<h2 id="Vue3-0"><a href="#Vue3-0" class="headerlink" title="Vue3.0"></a>Vue3.0</h2><blockquote>
+<p>截止笔者撰写这篇文章（2020.08.28），Vue3.0依然处于Beta状态</p>
+</blockquote>
+<p>[官方文档][<a href="https://v3.vuejs.org/]" target="_blank" rel="noopener">https://v3.vuejs.org/]</a></p>
+<h4 id="声明式渲染"><a href="#声明式渲染" class="headerlink" title="声明式渲染"></a>声明式渲染</h4><p>v2:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">  &#123;&#123; message &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    message: <span class="string">'Hello Vue!'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>v3:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"counter"</span>&gt;</span></span><br><span class="line">  Counter: &#123;&#123; counter &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Counter = &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      counter: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Vue.createApp(Counter).mount(<span class="string">'#counter'</span>)</span><br></pre></td></tr></table></figure>
+<p>Vue3通过<code>createApp</code>函数来处理Vue组件的创建，渲染阶段，对比Vue2的<code>new Vue</code>实例的方式，虽然写法不同，但是本质的处理方法是一致的：</p>
+<ul>
+<li>创建vnode</li>
+<li>渲染vnode</li>
+<li>生成DOM</li>
+</ul>
+<h2 id="Composition-API"><a href="#Composition-API" class="headerlink" title="Composition API"></a>Composition API</h2><blockquote>
+<p>Composition API允许创建组件时，提取重复地逻辑代码，形成功能性的代码段</p>
+</blockquote>
+<p><strong>为什么会有Compostion API ?</strong></p>
+<p>在Vue2.x中，组件的使用是基于对象参数的形式，开发者通常会在不同的组件中编写不同的Options(data、computed、props、method、lifecycle hooks)</p>
+<p>示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/components/UserRepositories.vue</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  components: &#123; RepositoriesFilters, RepositoriesSortBy, RepositoriesList &#125;,</span><br><span class="line">  props: &#123;</span><br><span class="line">    user: &#123; <span class="attr">type</span>: <span class="built_in">String</span> &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      repositories: [], <span class="comment">// 1</span></span><br><span class="line">      filters: &#123; ... &#125;, <span class="comment">// 3</span></span><br><span class="line">      searchQuery: <span class="string">''</span> <span class="comment">// 2</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    filteredRepositories () &#123; ... &#125;, <span class="comment">// 3</span></span><br><span class="line">    repositoriesMatchingSearchQuery () &#123; ... &#125;, <span class="comment">// 2</span></span><br><span class="line">  &#125;,</span><br><span class="line">  watch: &#123;</span><br><span class="line">    user: <span class="string">'getUserRepositories'</span> <span class="comment">// 1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    getUserRepositories () &#123;</span><br><span class="line">      <span class="comment">// using `this.user` to fetch user repositories</span></span><br><span class="line">    &#125;, <span class="comment">// 1</span></span><br><span class="line">    updateFilters () &#123; ... &#125;, <span class="comment">// 3</span></span><br><span class="line">  &#125;,</span><br><span class="line">  mounted () &#123;</span><br><span class="line">    <span class="keyword">this</span>.getUserRepositories() <span class="comment">// 1</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>随着组件的复杂性提高，组件越发的臃肿，代码可维护性变差，并且很难去重用公用逻辑，之前的解决方案主要是通过：mixins</p>
+<p>为了避免上述的情况，不在依托于Options API来开发组件，Vue3提供了<strong>setup</strong>启动函数作为逻辑的入口</p>
+<p>示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button @click=<span class="string">"increment"</span>&gt;</span><br><span class="line">    Count is: &#123;&#123; state.count &#125;&#125;, double is: &#123;&#123; state.double &#125;&#125;</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; reactive, computed &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    <span class="keyword">const</span> state = reactive(&#123;</span><br><span class="line">      count: <span class="number">0</span>,</span><br><span class="line">      double: computed(<span class="function"><span class="params">()</span> =&gt;</span> state.count * <span class="number">2</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      state.count++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      state,</span><br><span class="line">      increment</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>为什么setup函数返回一个对象，就得以使数据与模板直接建立响应式联系？</strong>这得从组件渲染得过程讲起</p>
+<p>Vue3是通过<code>createApp</code>创建组件实例，返回一个包含<code>mount</code>方法得对象</p>
+<p><code>mount</code>方法是如何处理组件的</p>
+<ul>
+<li>内部通过<code>createVNode</code>方法创建vnode</li>
+<li>将生成的vnode通过<code>render</code>方法进行渲染</li>
+<li>通过patch判断，如果是组件，将采用<code>mountComponent</code>方法进行挂载</li>
+<li>实际内部通过<code>createComponentInstance</code>创建组件实例</li>
+<li>当实例创建完毕后，塞进<code>setupComponent(instance)</code>进入设置组件阶段</li>
+<li>最后执行副作用函数<code>setupRenderEffect</code></li>
+</ul>
+<p>在这个过程中，想找出数据与模板建立联系的地方，可能是<code>createComponentInstance</code>创建实例阶段或者是<code>setupComponent(instance)</code>组件设置阶段</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComponentInstance</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  vnode: VNode,</span></span></span><br><span class="line"><span class="function"><span class="params">  ...</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">type</span> = vnode.type <span class="keyword">as</span> ConcreteComponent</span><br><span class="line">  <span class="comment">// inherit parent app context - or - if root, adopt from root vnode</span></span><br><span class="line">  <span class="keyword">const</span> appContext =</span><br><span class="line">    (parent ? parent.appContext : vnode.appContext) || emptyAppContext</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> instance: ComponentInternalInstance = &#123;</span><br><span class="line">    uid: uid++, <span class="comment">//唯一值</span></span><br><span class="line">    vnode, <span class="comment">//组件vnode</span></span><br><span class="line">    <span class="keyword">type</span>, <span class="comment">// 组件vnode类型</span></span><br><span class="line">    parent, <span class="comment">//父类实例</span></span><br><span class="line">    appContext, <span class="comment">// 当前上下文</span></span><br><span class="line">    root: <span class="literal">null</span>!, <span class="comment">// 根实例</span></span><br><span class="line">    next: <span class="literal">null</span>, <span class="comment">// 新的vnode</span></span><br><span class="line">    subTree: <span class="literal">null</span>!, <span class="comment">// will be set synchronously right after creation</span></span><br><span class="line">    update: <span class="literal">null</span>!, <span class="comment">// will be set synchronously right after creation</span></span><br><span class="line">    render: <span class="literal">null</span>, <span class="comment">// 渲染函数</span></span><br><span class="line">    proxy: <span class="literal">null</span>, <span class="comment">// 代理函数</span></span><br><span class="line">    withProxy: <span class="literal">null</span>, <span class="comment">// with 区域代理</span></span><br><span class="line">    effects: <span class="literal">null</span>, </span><br><span class="line">    provides: parent ? parent.provides : <span class="built_in">Object</span>.create(appContext.provides),</span><br><span class="line">    accessCache: <span class="literal">null</span>!, <span class="comment">//访问缓存</span></span><br><span class="line">    renderCache: [], <span class="comment">//渲染缓存</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// local resovled assets</span></span><br><span class="line">    components: <span class="literal">null</span>, </span><br><span class="line">    directives: <span class="literal">null</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// state</span></span><br><span class="line">    ctx: EMPTY_OBJ,</span><br><span class="line">    data: EMPTY_OBJ,</span><br><span class="line">    props: EMPTY_OBJ,</span><br><span class="line">    attrs: EMPTY_OBJ,</span><br><span class="line">    slots: EMPTY_OBJ,</span><br><span class="line">    refs: EMPTY_OBJ,</span><br><span class="line">    setupState: EMPTY_OBJ,</span><br><span class="line">    setupContext: <span class="literal">null</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// suspense related</span></span><br><span class="line">    suspense,</span><br><span class="line">    asyncDep: <span class="literal">null</span>,</span><br><span class="line">    asyncResolved: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// lifecycle hooks</span></span><br><span class="line">    <span class="comment">// not using enums here because it results in computed properties</span></span><br><span class="line">    isMounted: <span class="literal">false</span>,</span><br><span class="line">    isUnmounted: <span class="literal">false</span>,</span><br><span class="line">    isDeactivated: <span class="literal">false</span>,</span><br><span class="line">    bc: <span class="literal">null</span>,</span><br><span class="line">    c: <span class="literal">null</span>,</span><br><span class="line">    bm: <span class="literal">null</span>,</span><br><span class="line">    m: <span class="literal">null</span>,</span><br><span class="line">    bu: <span class="literal">null</span>,</span><br><span class="line">    u: <span class="literal">null</span>,</span><br><span class="line">    um: <span class="literal">null</span>,</span><br><span class="line">    bum: <span class="literal">null</span>,</span><br><span class="line">    da: <span class="literal">null</span>,</span><br><span class="line">    a: <span class="literal">null</span>,</span><br><span class="line">    rtg: <span class="literal">null</span>,</span><br><span class="line">    rtc: <span class="literal">null</span>,</span><br><span class="line">    ec: <span class="literal">null</span>,</span><br><span class="line">    emit: <span class="literal">null</span> <span class="keyword">as</span> <span class="built_in">any</span>, <span class="comment">// to be set immediately</span></span><br><span class="line">    emitted: <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">    instance.ctx = createRenderContext(instance)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    instance.ctx = &#123; _: instance &#125; </span><br><span class="line">  &#125;</span><br><span class="line">  instance.root = parent ? parent.root : instance</span><br><span class="line">  instance.emit = emit.bind(<span class="literal">null</span>, instance)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (__DEV__ || __FEATURE_PROD_DEVTOOLS__) &#123;</span><br><span class="line">    devtoolsComponentAdded(instance)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> instance</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>通过翻阅源码可以发现，<code>createComponentInstance</code>创建了实例，定义了非常多的属性, 有些属性的用法可能比较少见，但是可以看出，这个函数仅仅只是初始化实例而已，只是完成了对组件的属性、事件、上下文的初始化设置</p>
+<p>其中<strong>instance.ctx = { _: instance } </strong>这里拷贝了实例本身，在后续会被用到</p>
+<p>再看看<code>setupComponent(instance)</code>具体做了什么</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setupComponent</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  instance: ComponentInternalInstance, <span class="comment">//默认组件实例</span></span></span></span><br><span class="line"><span class="function"><span class="params">  isSSR = <span class="literal">false</span> <span class="comment">// SSR渲染</span></span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  isInSSRComponentSetup = isSSR</span><br><span class="line">  <span class="comment">// 获取参数属性</span></span><br><span class="line">  <span class="keyword">const</span> &#123; props, children, shapeFlag &#125; = instance.vnode</span><br><span class="line">  <span class="comment">// ShapeFlags 是vnode 种类的标志位， 其中STATEFUL_COMPONENT用以判断组件的状态</span></span><br><span class="line">  <span class="keyword">const</span> isStateful = shapeFlag &amp; ShapeFlags.STATEFUL_COMPONENT</span><br><span class="line">  <span class="comment">// 初始化props</span></span><br><span class="line">  initProps(instance, props, isStateful, isSSR)</span><br><span class="line">  <span class="comment">// 初始化slot</span></span><br><span class="line">  initSlots(instance, children)</span><br><span class="line">  <span class="comment">// 根据状态设置组件实例</span></span><br><span class="line">  <span class="keyword">const</span> setupResult = isStateful</span><br><span class="line">    ? setupStatefulComponent(instance, isSSR)</span><br><span class="line">    : <span class="literal">undefined</span></span><br><span class="line">  isInSSRComponentSetup = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">return</span> setupResult</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，其中最关键的函数就是<code>setupStatefulComponent</code></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setupStatefulComponent</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  ...</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> Component = instance.type <span class="keyword">as</span> ComponentOptions</span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 创建代理属性的访问缓存</span></span><br><span class="line">  instance.accessCache = &#123;&#125;</span><br><span class="line">  <span class="comment">// 通过new proxy 对实例对象进行上下文代理</span></span><br><span class="line">  instance.proxy = <span class="keyword">new</span> Proxy(instance.ctx, PublicInstanceProxyHandlers)</span><br><span class="line">   ...</span><br><span class="line">  <span class="comment">// 判断组件中是否启用了setup函数</span></span><br><span class="line">  <span class="keyword">const</span> &#123; setup &#125; = Component</span><br><span class="line">  <span class="keyword">if</span> (setup) &#123;</span><br><span class="line">    <span class="comment">// 如果setup函数携带参数 创建SetupContext</span></span><br><span class="line">    <span class="keyword">const</span> setupContext = (instance.setupContext =</span><br><span class="line">      setup.length &gt; <span class="number">1</span> ? createSetupContext(instance) : <span class="literal">null</span>)</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 完成组件设置</span></span><br><span class="line">	finishComponentSetup(instance, isSSR)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>setupStatefulComponent</code>通过<code>new Proxy</code>将实例对象进行响应代理，而具体的代理行为交给了<code>PublicInstanceProxyHandlers</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package/runtime-core/src/componentPublicInstance.ts</span></span><br><span class="line"><span class="keyword">const</span> PublicInstanceProxyHandlers: ProxyHandler&lt;any&gt; = &#123;</span><br><span class="line">  <span class="keyword">get</span>(&#123; _: instance &#125;: ComponentRenderContext, <span class="attr">key</span>: string) &#123;</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">if</span> (key[<span class="number">0</span>] !== <span class="string">'$'</span>) &#123;</span><br><span class="line">      <span class="comment">// 命中条件，则先从代理属性的缓存中获取数据</span></span><br><span class="line">      <span class="keyword">const</span> n = accessCache![key]</span><br><span class="line">      <span class="keyword">if</span> (n !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (n) &#123;</span><br><span class="line">          <span class="keyword">case</span> AccessTypes.SETUP:</span><br><span class="line">            <span class="keyword">return</span> setupState[key]</span><br><span class="line">          <span class="keyword">case</span> AccessTypes.DATA:</span><br><span class="line">            <span class="keyword">return</span> data[key]</span><br><span class="line">          <span class="keyword">case</span> AccessTypes.CONTEXT:</span><br><span class="line">            <span class="keyword">return</span> ctx[key]</span><br><span class="line">          <span class="keyword">case</span> AccessTypes.PROPS:</span><br><span class="line">            <span class="keyword">return</span> props![key]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (setupState !== EMPTY_OBJ &amp;&amp; hasOwn(setupState, key)) &#123;</span><br><span class="line">        accessCache![key] = AccessTypes.SETUP</span><br><span class="line">        <span class="comment">// 从setupState获取数据</span></span><br><span class="line">        <span class="keyword">return</span> setupState[key]</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (data !== EMPTY_OBJ &amp;&amp; hasOwn(data, key)) &#123;</span><br><span class="line">        accessCache![key] = AccessTypes.DATA</span><br><span class="line">        <span class="comment">// 从data中获取数据</span></span><br><span class="line">        <span class="keyword">return</span> data[key]</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</span><br><span class="line">        <span class="comment">// only cache other properties when instance has declared (thus stable)</span></span><br><span class="line">        <span class="comment">// props</span></span><br><span class="line">        (normalizedProps = normalizePropsOptions(type)[<span class="number">0</span>]) &amp;&amp;</span><br><span class="line">        hasOwn(normalizedProps, key)</span><br><span class="line">      ) &#123;</span><br><span class="line">        accessCache![key] = AccessTypes.PROPS</span><br><span class="line">        <span class="comment">// 从props中获取数据</span></span><br><span class="line">        <span class="keyword">return</span> props![key]</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ctx !== EMPTY_OBJ &amp;&amp; hasOwn(ctx, key)) &#123;</span><br><span class="line">        accessCache![key] = AccessTypes.CONTEXT</span><br><span class="line">       <span class="comment">// 从ctx中获取数据   </span></span><br><span class="line">        <span class="keyword">return</span> ctx[key]</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!__FEATURE_OPTIONS_API__ || !isInBeforeCreate) &#123;</span><br><span class="line">        accessCache![key] = AccessTypes.OTHER</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> publicGetter = publicPropertiesMap[key]</span><br><span class="line">    <span class="keyword">let</span> cssModule, globalProperties</span><br><span class="line">    <span class="comment">// public $xxx properties</span></span><br><span class="line">    <span class="keyword">if</span> (publicGetter) &#123;</span><br><span class="line">      <span class="keyword">if</span> (key === <span class="string">'$attrs'</span>) &#123;</span><br><span class="line">        track(instance, TrackOpTypes.GET, key)</span><br><span class="line">        __DEV__ &amp;&amp; markAttrsAccessed()</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 返回公共属性值</span></span><br><span class="line">      <span class="keyword">return</span> publicGetter(instance)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</span><br><span class="line">      <span class="comment">// css 模块 vue-loader编译注入</span></span><br><span class="line">      (cssModule = type.__cssModules) &amp;&amp;</span><br><span class="line">      (cssModule = cssModule[key])</span><br><span class="line">    ) &#123;</span><br><span class="line">      <span class="keyword">return</span> cssModule</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ctx !== EMPTY_OBJ &amp;&amp; hasOwn(ctx, key)) &#123;</span><br><span class="line">      <span class="comment">// user may set custom properties to `this` that start with `$`</span></span><br><span class="line">      <span class="comment">// 用户自定义属性以$符号开头 </span></span><br><span class="line">      accessCache![key] = AccessTypes.CONTEXT</span><br><span class="line">      <span class="comment">// 返回用户自定义属性的值</span></span><br><span class="line">      <span class="keyword">return</span> ctx[key]</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</span><br><span class="line">      ((globalProperties = appContext.config.globalProperties),</span><br><span class="line">      hasOwn(globalProperties, key))</span><br><span class="line">    ) &#123;</span><br><span class="line">      <span class="comment">// 返回全局属性</span></span><br><span class="line">      <span class="keyword">return</span> globalProperties[key]</span><br><span class="line">    &#125; </span><br><span class="line">     ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正常的<code>getter</code>流程应该是</p>
+<ul>
+<li>1、从代理属性的缓存获取数据</li>
+<li>2、从setupState中获取数据</li>
+<li>3、从data中获取数据</li>
+<li>4、从props中获取数据</li>
+<li>5、从当前上下文ctx中获取数据</li>
+</ul>
+<p>这里可以得到一个信息：<strong>Cpmposition API 优先级大于 Data</strong></p>
+<p>当我们修改<code>intance.ctx</code>时,就会触发其中的<code>setter</code>操作，同样的它会按照上面的流程，对操作的属性进行设置</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package/runtime-core/src/componentPublicInstance.ts</span></span><br><span class="line"><span class="keyword">const</span> PublicInstanceProxyHandlers: ProxyHandler&lt;<span class="built_in">any</span>&gt; = &#123;</span><br><span class="line">  <span class="keyword">set</span>(</span><br><span class="line">    &#123; _: instance &#125;: ComponentRenderContext,</span><br><span class="line">    key: <span class="built_in">string</span>,</span><br><span class="line">    value: <span class="built_in">any</span></span><br><span class="line">  ): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; data, setupState, ctx &#125; = instance</span><br><span class="line">    <span class="keyword">if</span> (setupState !== EMPTY_OBJ &amp;&amp; hasOwn(setupState, key)) &#123;</span><br><span class="line">      <span class="comment">// 设置setupState属性</span></span><br><span class="line">      setupState[key] = value</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (data !== EMPTY_OBJ &amp;&amp; hasOwn(data, key)) &#123;</span><br><span class="line">        <span class="comment">//设置data属性</span></span><br><span class="line">      data[key] = value</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key <span class="keyword">in</span> instance.props) &#123;</span><br><span class="line">        <span class="comment">//props报错，不允许设置</span></span><br><span class="line">      __DEV__ &amp;&amp;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">`Attempting to mutate prop "<span class="subst">$&#123;key&#125;</span>". Props are readonly.`</span>,</span><br><span class="line">          instance</span><br><span class="line">        )</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不准使用$开头的属性</span></span><br><span class="line">    <span class="keyword">if</span> (key[<span class="number">0</span>] === <span class="string">'$'</span> &amp;&amp; key.slice(<span class="number">1</span>) <span class="keyword">in</span> instance) &#123;</span><br><span class="line">      __DEV__ &amp;&amp;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">`Attempting to mutate public property "<span class="subst">$&#123;key&#125;</span>". `</span> +</span><br><span class="line">            <span class="string">`Properties starting with $ are reserved and readonly.`</span>,</span><br><span class="line">          instance</span><br><span class="line">        )</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 降级代理</span></span><br><span class="line">      <span class="keyword">if</span> (__DEV__ &amp;&amp; key <span class="keyword">in</span> instance.appContext.config.globalProperties) &#123;</span><br><span class="line">        <span class="built_in">Object</span>.defineProperty(ctx, key, &#123;</span><br><span class="line">          enumerable: <span class="literal">true</span>,</span><br><span class="line">          configurable: <span class="literal">true</span>,</span><br><span class="line">          value</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="comment">// 用户自定义属性赋值</span></span><br><span class="line">        ctx[key] = value</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>回顾了组件的创建流程以及渲染挂载的操作，其中我们知道setup函数之所以返回对象就可以建立模板与数据的联系，最关键在于Vue3在组件设置阶段时，会检查是否声明setup函数：</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/runtime-core/src/component.ts  </span></span><br><span class="line">  <span class="comment">// 判断组件中是否启用了setup函数</span></span><br><span class="line">  <span class="keyword">const</span> &#123; setup &#125; = Component</span><br><span class="line">  <span class="keyword">if</span> (setup) &#123;</span><br><span class="line">    <span class="comment">// 如果setup函数携带参数 创建SetupContext</span></span><br><span class="line">    <span class="keyword">const</span> setupContext = (instance.setupContext =</span><br><span class="line">      setup.length &gt; <span class="number">1</span> ? createSetupContext(instance) : <span class="literal">null</span>)</span><br><span class="line">    <span class="comment">// 获取setup函数执行结果</span></span><br><span class="line">    <span class="keyword">const</span> setupResult = callWithErrorHandling(</span><br><span class="line">      setup,</span><br><span class="line">      instance,</span><br><span class="line">      ErrorCodes.SETUP_FUNCTION,</span><br><span class="line">      <span class="comment">// 这里很关键，调用setup函数默认的两个参数 props 、context 就是在这里塞入的</span></span><br><span class="line">      [__DEV__ ? shallowReadonly(instance.props) : instance.props, setupContext] </span><br><span class="line">    )</span><br><span class="line">    resetTracking()</span><br><span class="line">    currentInstance = <span class="literal">null</span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">if</span> (isPromise(setupResult)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isSSR) &#123;</span><br><span class="line">        <span class="comment">// return the promise so server-renderer can wait on it</span></span><br><span class="line">        <span class="keyword">return</span> setupResult.then(<span class="function">(<span class="params">resolvedResult: unknown</span>) =&gt;</span> &#123;</span><br><span class="line">          handleSetupResult(instance, resolvedResult, isSSR)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__FEATURE_SUSPENSE__) &#123;</span><br><span class="line">        <span class="comment">// async setup returned Promise.</span></span><br><span class="line">        <span class="comment">// bail here and wait for re-entry.</span></span><br><span class="line">        instance.asyncDep = setupResult</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">`setup() returned a Promise, but the version of Vue you are using `</span> +</span><br><span class="line">            <span class="string">`does not support it yet.`</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      handleSetupResult(instance, setupResult, isSSR)</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>一旦发现存在setup函数，就会通过<code>createSetupContext</code>创建<code>setupContext</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createSetupContext</span>(<span class="params">instance: ComponentInternalInstance</span>): <span class="title">SetupContext</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.freeze(&#123;</span><br><span class="line">      <span class="keyword">get</span> attrs() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Proxy</span>(instance.attrs, attrHandlers)</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="keyword">get</span> slots() &#123;</span><br><span class="line">        <span class="keyword">return</span> shallowReadonly(instance.slots)</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="keyword">get</span> emit() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">event: string, ...args: any[]</span>) =&gt;</span> instance.emit(event, ...args)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      attrs: instance.attrs,</span><br><span class="line">      slots: instance.slots,</span><br><span class="line">      emit: instance.emit</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>setupContext</code>是一个返回了组件实例的<code>attrs</code>、<code>slots</code>、<code>emit</code>这三个属性的对象，分别是组件属性、插槽属性、事件触发方法</p>
+<p>最重要的一步是<code>setupResult</code>，通过<code>callWithErrorHandling</code>获取<code>setup</code>函数的执行结果</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/runtime-core/src/errorHandling.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callWithErrorHandling</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  fn: <span class="built_in">Function</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">  instance: ComponentInternalInstance | <span class="literal">null</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">  <span class="keyword">type</span>: ErrorTypes,</span></span></span><br><span class="line"><span class="function"><span class="params">  args?: unknown[]</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> res</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    res = args ? fn(...args) : fn()</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    handleError(err, instance, <span class="keyword">type</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>callWithErrorHandling</code>只是包装检查出错执行setup函数而已，并将函数执行结果返回</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="keyword">const</span> setupResult = callWithErrorHandling(</span><br><span class="line">    setup,</span><br><span class="line">    instance,</span><br><span class="line">    ErrorCodes.SETUP_FUNCTION,</span><br><span class="line">    <span class="comment">// 这里很关键，调用setup函数默认的两个参数 props 、context 就是在这里塞入的</span></span><br><span class="line">    [__DEV__ ? shallowReadonly(instance.props) : instance.props, setupContext] </span><br><span class="line">)</span><br><span class="line">...</span><br><span class="line"><span class="keyword">if</span> (isPromise(setupResult)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (isSSR) &#123;</span><br><span class="line">        <span class="comment">// return the promise so server-renderer can wait on it</span></span><br><span class="line">        <span class="keyword">return</span> setupResult.then(<span class="function">(<span class="params">resolvedResult: unknown</span>) =&gt;</span> &#123;</span><br><span class="line">          handleSetupResult(instance, resolvedResult, isSSR)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__FEATURE_SUSPENSE__) &#123;</span><br><span class="line">        <span class="comment">// async setup returned Promise.</span></span><br><span class="line">        <span class="comment">// bail here and wait for re-entry.</span></span><br><span class="line">        instance.asyncDep = setupResult</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__DEV__) &#123;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">`setup() returned a Promise, but the version of Vue you are using `</span> +</span><br><span class="line">            <span class="string">`does not support it yet.`</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      handleSetupResult(instance, setupResult, isSSR)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在拿到<code>setupResult</code>结果，可以观察到接下来的执行，可以看到原来<code>setup</code>是支持Promise返回处理的，暂且不管，可以看到返回的结果将由<code>handleSetupResult</code>函数执行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/runtime-core/src/component.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleSetupResult</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  instance: ComponentInternalInstance,</span></span></span><br><span class="line"><span class="function"><span class="params">  setupResult: unknown,</span></span></span><br><span class="line"><span class="function"><span class="params">  isSSR: <span class="built_in">boolean</span></span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (isFunction(setupResult)) &#123;</span><br><span class="line">    instance.render = setupResult <span class="keyword">as</span> InternalRenderFunction</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isObject(setupResult)) &#123;</span><br><span class="line">    ...</span><br><span class="line">    instance.setupState = proxyRefs(setupResult)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">  finishComponentSetup(instance, isSSR)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面代码可以发现，<code>setup</code>函数是可以返回一个渲染函数的</p>
+<p>这里我们的逻辑明显是走<code>instance.setupState = proxyRefs(setupResult)</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package/reactive/src/ref.ts</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">proxyRefs</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">object</span>&gt;(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  objectWithRefs: T</span></span></span><br><span class="line"><span class="function"><span class="params"></span>): <span class="title">ShallowUnwrapRef</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> isReactive(objectWithRefs)</span><br><span class="line">    ? objectWithRefs</span><br><span class="line">    : <span class="keyword">new</span> <span class="built_in">Proxy</span>(objectWithRefs, shallowUnwrapHandlers)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>判断属性是否只读，不是则将<code>setup</code>函数返回的对象进行响应式处理，<code>setup</code>函数的返回对象会被<code>shallowUnwrapHandlers</code>进行处理</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/23/猜数问题-体验二分法的快乐/" rel="next" title="猜数问题-体验二分法的快乐">
+                <i class="fa fa-chevron-left"></i> 猜数问题-体验二分法的快乐
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/08/探索服务端渲染/" rel="prev" title="探索服务端渲染">
+                探索服务端渲染 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#高阶特性"><span class="nav-number">1.</span> <span class="nav-text">高阶特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义v-model"><span class="nav-number">1.1.</span> <span class="nav-text">自定义v-model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nextTick"><span class="nav-number">1.2.</span> <span class="nav-text">$nextTick</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#forceUpdate"><span class="nav-number">1.3.</span> <span class="nav-text">$forceUpdate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态组件与异步组件"><span class="nav-number">1.4.</span> <span class="nav-text">动态组件与异步组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keep-alive"><span class="nav-number">1.5.</span> <span class="nav-text">keep-alive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mixin"><span class="nav-number">1.6.</span> <span class="nav-text">Mixin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理剖析"><span class="nav-number">2.</span> <span class="nav-text">原理剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组件化"><span class="nav-number">2.1.</span> <span class="nav-text">组件化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据劫持"><span class="nav-number">2.2.</span> <span class="nav-text">数据劫持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟DOM-Virtual-DOM"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟DOM(Virtual DOM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板编译"><span class="nav-number">2.4.</span> <span class="nav-text">模板编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件渲染-更新的过程"><span class="nav-number">2.5.</span> <span class="nav-text">组件渲染/更新的过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面试常规"><span class="nav-number">3.</span> <span class="nav-text">面试常规</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue3-0"><span class="nav-number">4.</span> <span class="nav-text">Vue3.0</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#声明式渲染"><span class="nav-number">4.0.1.</span> <span class="nav-text">声明式渲染</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#Composition-API"><span class="nav-number">5.</span> <span class="nav-text">Composition API</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

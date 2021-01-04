@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在进行JS编程的过程中，我相信绝大多数的人都会遇到诸如undefined、NAN这类的错误，在很大程度上就是因为数据结构没有进行预先的检查导致的，为了满足JS开发大型应用的需求，Typescript横空出世，提供了严谨的类型系统，帮助开发人员能够进行提前的类型检查，这是必要且有效的，Typescript当然也支持接口继承">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript继承之道">
+<meta property="og:url" content="http://yoursite.com/2021/01/04/Javascript继承之道/index.html">
+<meta property="og:site_name" content="锦衣无涯">
+<meta property="og:description" content="在进行JS编程的过程中，我相信绝大多数的人都会遇到诸如undefined、NAN这类的错误，在很大程度上就是因为数据结构没有进行预先的检查导致的，为了满足JS开发大型应用的需求，Typescript横空出世，提供了严谨的类型系统，帮助开发人员能够进行提前的类型检查，这是必要且有效的，Typescript当然也支持接口继承">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-01-04T09:27:18.430Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript继承之道">
+<meta name="twitter:description" content="在进行JS编程的过程中，我相信绝大多数的人都会遇到诸如undefined、NAN这类的错误，在很大程度上就是因为数据结构没有进行预先的检查导致的，为了满足JS开发大型应用的需求，Typescript横空出世，提供了严谨的类型系统，帮助开发人员能够进行提前的类型检查，这是必要且有效的，Typescript当然也支持接口继承">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/04/Javascript继承之道/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Javascript继承之道 | 锦衣无涯</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<link rel="stylesheet" href="/music/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/music/APlayer.min.js"></script>
+<script type="text/javascript" src="/music/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">锦衣无涯</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">你只有拼尽全力，才能看起来毫不费力</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/04/Javascript继承之道/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="罗锦旭">
+      <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="锦衣无涯">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Javascript继承之道
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-01-04 17:24:43 / 修改时间：17:27:18" itemprop="dateCreated datePublished" datetime="2021-01-04T17:24:43+08:00">2021-01-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在进行JS编程的过程中，我相信绝大多数的人都会遇到诸如undefined、NAN这类的错误，在很大程度上就是因为数据结构没有进行预先的检查导致的，为了满足JS开发大型应用的需求，Typescript横空出世，提供了严谨的类型系统，帮助开发人员能够进行提前的类型检查，这是必要且有效的，Typescript当然也支持接口继承</p>
+<a id="more"></a>
+<h1 id="继承之道"><a href="#继承之道" class="headerlink" title="继承之道"></a>继承之道</h1><h2 id="接口继承"><a href="#接口继承" class="headerlink" title="接口继承"></a>接口继承</h2><p>传统的面向对象语言都支持两种继承方式：<strong>接口继承</strong>和<strong>实现继承</strong>。</p>
+<p>然而在JS中只支持实现继承，这是因为JS缺乏接口的概念，但是我偏偏要讲一下这所谓的接口继承</p>
+<p>接口，广泛的存在于C++、Java等语言中，它的作用是对值所具有的数据结构进行类型检测，这很有用，它保证了数据结构的规范性、正确性，能够保证程序按照我们开发的预期去运行</p>
+<p>在进行JS编程的过程中，我相信绝大多数的人都会遇到诸如undefined、NAN这类的错误，在很大程度上就是因为数据结构没有进行预先的检查导致的，为了满足JS开发大型应用的需求，Typescript横空出世，提供了严谨的类型系统，帮助开发人员能够进行提前的类型检查，这是必要且有效的，Typescript当然也支持接口继承</p>
+<p>下面将通过简单的例子，使用Typescript中的接口继承</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Shape &#123;</span><br><span class="line">    color: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Square <span class="keyword">extends</span> Shape &#123;</span><br><span class="line">    sideLength: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> square = &lt;Square&gt; &#123;&#125;;</span><br><span class="line">square.color = <span class="string">'red'</span>;</span><br><span class="line">square.sideLength = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p>Square接口通过<strong>extends</strong>关键字继承了Shape接口，借助泛型来对声明对象进行类型检查，即可充分的保证，在程序被运行前该对象的数据结构必然具备color属性且为字符串类型和sideLength属性且为数字类型</p>
+<p>这一切都得益于Typescript的预先类型检查系统的帮忙！</p>
+<h2 id="实现继承"><a href="#实现继承" class="headerlink" title="实现继承"></a>实现继承</h2><p>实际上，在绝大多数的应用开发中，实现继承才是最被经常使用的</p>
+<p>在学习JS继承时，我很快为这种行为在内心下了定义：方便的将通用的、公共的的方法重复使用！</p>
+<p>比如koa的底层对象 Application 就是直接继承于Node.js中的events模块的方法，要是重写一遍那得多拉跨呢：），这就是继承带来得便捷性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Emitter</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>这里ES6使用extends关键字实现了继承，该关键字是语法糖，本质上依然采用的是ES5原型链的模式实现继承</p>
+<blockquote>
+<p>原型与构造函数得小知识：</p>
+<p>每个构造函数都会有一个原型对象，原型有一个属性指回构造函数，如果原型是另一个构造函数的实例，那么就意味着，这个原型将具备一条内部指针指向另一个原型</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.property = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.property;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.getSubVqalue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.subprotype;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> instance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance.getSuperValue()) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>instance能够调用getSuperValue方法得益于<code>SubType.prototype = new SuperType()</code>扩展了SubType的原型链，通过自下往上的方法，最终寻到getSuperValue方法进行调用，这种“顺藤摸瓜”的方式就是原型链带来的独特的继承思想</p>
+<p><strong>那么原型链的源头是什么？</strong>，做一个有趣的打印：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(instance.toString());  <span class="comment">// [object Object]</span></span><br></pre></td></tr></table></figure>
+<p>instance竟然能调用toString方法，这也太夸张了，从哪儿来的？原来啊，所有的引用类型都继承于Object，这是引擎内部通过原型链实现的，验证这一点只需要通过instanceof关键字</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="原型缺陷"><a href="#原型缺陷" class="headerlink" title="原型缺陷"></a>原型缺陷</h2><p>原型链是实现继承的强大工具，但存在两个问题</p>
+<ul>
+<li>无法继承父类私有属性</li>
+<li>无法向父类构造函数传参</li>
+</ul>
+<p>已知原型的特点是会被所有实例中共享引用值属性或方法，这也是它最重要的特性</p>
+<p>但所谓“成也萧何,败也萧何”，正是这个特点导致继承无法私有化属性方法，如下所示</p>
+<blockquote>
+<p>实例的私有化属性应当具有唯一性</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nums = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line"><span class="keyword">let</span> instance1 = <span class="keyword">new</span> SubType();</span><br><span class="line">instance1.nums.push(<span class="number">4</span>); <span class="comment">// 1234</span></span><br><span class="line"><span class="keyword">let</span> instance2 = <span class="keyword">new</span> SubType();</span><br><span class="line">instance2.nums.push(<span class="number">5</span>); <span class="comment">// 12345</span></span><br></pre></td></tr></table></figure>
+<p>nums属性会被所有实例共享，导致这因素的原因在于将SuperType实例赋值给SubType.prototype原型时，由于new关键字的this指向机制，是取决于运行时，因此就创建了一个类似SubType.prototype.color的原型属性</p>
+<p>那么如何让每个实例拥有属于自己的nums属性？答案是使用<strong>盗用构造函数</strong>，简单的讲就是在子类构造函数中执行父类构造函数，借助apply或call关键字的帮助，完成this指向转换，如下所示</p>
+<blockquote>
+<p>使用apply或call关键字修改this指向的行为，被称之为硬绑定</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.colors = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line">&#125;;</span><br><span class="line">SuperType.prototype.getColor = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.colors;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>) </span>&#123;</span><br><span class="line">  	SuperType.call(<span class="keyword">this</span>, name);  </span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> instance1 = <span class="keyword">new</span> SubType(<span class="string">"lilei"</span>, <span class="number">27</span>);</span><br><span class="line"><span class="keyword">let</span> instance2 = <span class="keyword">new</span> SubType(<span class="string">"meimei"</span>, <span class="number">22</span>);</span><br><span class="line">instance1.colors.push(<span class="number">4</span>);</span><br><span class="line">instance2.colors.push(<span class="number">5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.name); <span class="comment">// lilei</span></span><br><span class="line"><span class="built_in">console</span>.log(instance1.age);<span class="comment">// 27</span></span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors); <span class="comment">// 1234</span></span><br><span class="line"><span class="built_in">console</span>.log(instance2.name); <span class="comment">// meimei</span></span><br><span class="line"><span class="built_in">console</span>.log(instance2.age);<span class="comment">// 22</span></span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors); <span class="comment">// 1235</span></span><br></pre></td></tr></table></figure>
+<p>上述代码解决了两个问题</p>
+<ul>
+<li>继承私有属性</li>
+<li>向父类构造函数传递参数</li>
+</ul>
+<p>但是聪明的你应该发现了，所有字类的实例是无法调用getColor方法的，因为其原型链根本就不存在该方法，该怎么做？如果我们继续用老方法，也就是将父类实例赋值给子类原型，猜猜会发生什么？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br></pre></td></tr></table></figure>
+<p>以下是Chrome浏览器控台打印的数据：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SubType &#123;<span class="attr">name</span>: <span class="string">"lilei"</span>, <span class="attr">colors</span>: <span class="built_in">Array</span>(<span class="number">4</span>), <span class="attr">age</span>: <span class="number">27</span>&#125;</span><br><span class="line">age: <span class="number">27</span></span><br><span class="line">colors: (<span class="number">4</span>) [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">name: <span class="string">"lilei"</span></span><br><span class="line">__proto__: SuperType</span><br><span class="line">colors: (<span class="number">3</span>) [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">name: <span class="literal">undefined</span></span><br><span class="line">__proto__: <span class="built_in">Object</span></span><br></pre></td></tr></table></figure>
+<p>可以看到SuperType依旧会生成colors属性，而这个属性压根不会被用到，造成这一现象的原因是因为父类构造函数被重复调用了两次，这就意味着性能浪费，但它能工作吗？能！虽有瑕疵，但可堪一用</p>
+<p>这种盗用构造函数+原型链完成继承的行为被称之为组合继承，也是被广泛使用的继承方式</p>
+<h2 id="完美继承"><a href="#完美继承" class="headerlink" title="完美继承"></a>完美继承</h2><p>组合式继承的缺点是父类以实例化的方式直接赋值在子类原型上会执行多一次父类的构造函数，完美的继承方式应该是可以避免这一点的</p>
+<p>2006 年，Douglas Crockford提出了原型式继承，给了解决这个问题的方向，他的出发点是不自定义类型也可以通过原型实现对象之间的信息共享，他给出了一个函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Object</span> (<span class="params">o</span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line">    F.prototype = o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Object函数会创建一个临时的构造函数，将传入的对象赋值给这个构造函数的原型，在返回这个构造函数的实例，本质上是对传入对象的一次浅复制，那么它有什么用处？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123;</span><br><span class="line">    name: <span class="string">"lili"</span>,</span><br><span class="line">    friends: [<span class="string">"mimi"</span>,<span class="string">"xixi"</span>]</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> p1 = object(person);</span><br><span class="line">p1.name = <span class="string">"lilei"</span>;</span><br><span class="line">p1.friends.push(<span class="string">"nunu"</span>);</span><br><span class="line"><span class="keyword">let</span> p2 = object(person);</span><br><span class="line">p2.name = <span class="string">"gigi"</span>;</span><br><span class="line">p2.friends.push(<span class="string">"knight"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(person.friends); <span class="comment">// ["mimi", "xixi", "nunu", "knight"]</span></span><br></pre></td></tr></table></figure>
+<p>原型继承的意义是<strong>通过间接创建临时构造函数的方式，实现实例间共享引用方法</strong></p>
+<p>因此Crockford 推荐的原型式继承适用于这种情况：你有一个对象，想在它的基础上再创建一个新对象</p>
+<blockquote>
+<p>ES5将原型模式的概念规范化，推出Object.create方法，该方法接收两个参数，分别是新对象原型的对象，以及给新对象定义的额外属性</p>
+</blockquote>
+<p>其实在我看来，这是一种对Javascript技艺娴熟的运用，原型继承巧妙地避开了组合继承中构造函数被重复调用地问题，本质上依旧是原型链那一套东西</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/04/你真的了解ES-Module吗/" rel="next" title="你真的了解ES Module吗?">
+                <i class="fa fa-chevron-left"></i> 你真的了解ES Module吗?
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/04/五大排序算法-javascript版/" rel="prev" title="五大排序算法(javascript版)">
+                五大排序算法(javascript版) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">罗锦旭</p>
+              <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#继承之道"><span class="nav-number">1.</span> <span class="nav-text">继承之道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#接口继承"><span class="nav-number">1.1.</span> <span class="nav-text">接口继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现继承"><span class="nav-number">1.2.</span> <span class="nav-text">实现继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型缺陷"><span class="nav-number">1.3.</span> <span class="nav-text">原型缺陷</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完美继承"><span class="nav-number">1.4.</span> <span class="nav-text">完美继承</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗锦旭</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+      
+  
+  <script type="text/javascript" color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

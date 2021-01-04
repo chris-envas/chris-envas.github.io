@@ -15,7 +15,7 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -180,7 +180,7 @@
 
 <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 <link rel="stylesheet" href="/music/APlayer.min.css">
 <div id="aplayer"></div>
 <script type="text/javascript" src="/music/APlayer.min.js"></script>
@@ -194,7 +194,7 @@
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
@@ -323,20 +323,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/11/Express实战/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="罗锦旭">
       <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="锦衣无涯">
     </span>
 
@@ -404,7 +404,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
 
                 
                 
@@ -461,7 +461,7 @@
 <p><code>res.render(texturl, [options])</code>接收两个参数，参数1为相关模板的路径位置，参数2为传递的模板数据（可选）</p>
 <h4 id="取消模板缓存"><a href="#取消模板缓存" class="headerlink" title="取消模板缓存"></a>取消模板缓存</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swig.setDefaults(&#123;<span class="attr">cache</span>: <span class="literal">false</span>&#125;) <span class="comment">//用于开发调试</span></span><br></pre></td></tr></table></figure>
 <h4 id="模板的继承"><a href="#模板的继承" class="headerlink" title="模板的继承"></a>模板的继承</h4><p>使用<code>extends</code>和<code>block</code>来实现模板继承，如下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//layout.html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;% block title %&#125;&#123;% endblock  %&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    &#123;% block head %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//layout.html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;% block title %&#125;&#123;% endblock  %&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    &#123;% block head %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock  %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// index.html</span><br><span class="line">&#123;% extends './layout.html' %&#125;</span><br><span class="line">&#123;% block title %&#125; index &#123;% endblock %&#125;</span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello swig<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;% endblock %&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="模板的引入"><a href="#模板的引入" class="headerlink" title="模板的引入"></a>模板的引入</h4><p>使用<code>include</code>实现模板引入</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include <span class="string">'page.html'</span> %&#125;</span><br></pre></td></tr></table></figure>
@@ -514,12 +514,12 @@
 <p>假设我们现在有个模型集合</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  _id: <span class="number">1</span>,</span><br><span class="line">  name: <span class="string">"luo"</span>,</span><br><span class="line">  money: <span class="number">250</span>,</span><br><span class="line">  cool: <span class="literal">true</span>,</span><br><span class="line">  details: &#123; <span class="attr">model</span>: <span class="string">"14Q2"</span>, <span class="attr">make</span>: <span class="string">"xxx"</span> &#125;,</span><br><span class="line">  tags: [ <span class="string">"apparel"</span>, <span class="string">"clothing"</span> ],</span><br><span class="line">  ratings: [ &#123; <span class="attr">by</span>: <span class="string">"ijk"</span>, <span class="attr">rating</span>: <span class="number">4</span> &#125; ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们可以这样更新</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">     $set:&#123;</span><br><span class="line">       money: <span class="number">500</span>,</span><br><span class="line">       details: &#123; <span class="attr">model</span>: <span class="string">"14Q3"</span>, <span class="attr">make</span>: <span class="string">"xyz"</span> &#125;,</span><br><span class="line">       tags: [ <span class="string">"coats"</span>, <span class="string">"outerwear"</span>, <span class="string">"clothing"</span> ]</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">     $<span class="keyword">set</span>:&#123;</span><br><span class="line">       money: <span class="number">500</span>,</span><br><span class="line">       details: &#123; <span class="attr">model</span>: <span class="string">"14Q3"</span>, <span class="attr">make</span>: <span class="string">"xyz"</span> &#125;,</span><br><span class="line">       tags: [ <span class="string">"coats"</span>, <span class="string">"outerwear"</span>, <span class="string">"clothing"</span> ]</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;)</span><br></pre></td></tr></table></figure>
 <p>上面的操作替换<code>money</code>的值为500，<code>details</code>为一个新的内嵌文档，<code>tags</code>为一个新的数组</p>
 <p>使用点号指定内嵌文档或者数组中字段</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $set:&#123;<span class="string">"details.nake"</span>:<span class="string">"newvalue"</span>&#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $<span class="keyword">set</span>:&#123;<span class="string">"details.nake"</span>:<span class="string">"newvalue"</span>&#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
 <p>查询<code>_id</code>等于100的，如下操作更新两个元素（数组索引是1）在数组tags字段和rating字段的第一个元素（索引是0）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $set:&#123;</span><br><span class="line">        <span class="string">"tags.1"</span>: <span class="string">"rain gear"</span>,</span><br><span class="line">        <span class="string">"ratings.0.rating"</span>: <span class="number">2</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">User.update(&#123;<span class="attr">_id</span>:<span class="number">1</span>&#125;,&#123;</span><br><span class="line">      $<span class="keyword">set</span>:&#123;</span><br><span class="line">        <span class="string">"tags.1"</span>: <span class="string">"rain gear"</span>,</span><br><span class="line">        <span class="string">"ratings.0.rating"</span>: <span class="number">2</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(info.ok)&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
 <h5 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h5><p>通过<code>findOne</code>查询数据库是否存在该条记录</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = <span class="built_in">require</span>(<span class="string">'../models/user'</span>) </span><br><span class="line"></span><br><span class="line">User.findOne(&#123;</span><br><span class="line">    usernam: username</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">userInfo</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(userInfo) &#123;</span><br><span class="line">        <span class="comment">// 数据库存在该条记录</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 反之不存在</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -679,7 +679,7 @@
 
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">罗锦旭</p>
               <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
@@ -692,7 +692,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -734,7 +734,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -789,7 +791,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -801,7 +803,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

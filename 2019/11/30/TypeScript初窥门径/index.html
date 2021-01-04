@@ -15,7 +15,7 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -115,7 +115,7 @@
 <meta property="og:site_name" content="锦衣无涯">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/18/19SfY9.md.png">
-<meta property="og:updated_time" content="2020-01-18T13:03:08.877Z">
+<meta property="og:updated_time" content="2020-09-08T08:42:36.819Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TypeScript初窥门径">
 <meta name="twitter:image" content="https://s2.ax1x.com/2020/01/18/19SfY9.md.png">
@@ -179,7 +179,7 @@
 
 <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 <link rel="stylesheet" href="/music/APlayer.min.css">
 <div id="aplayer"></div>
 <script type="text/javascript" src="/music/APlayer.min.js"></script>
@@ -193,7 +193,7 @@
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
@@ -322,20 +322,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/30/TypeScript初窥门径/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="罗锦旭">
       <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="锦衣无涯">
     </span>
 
@@ -386,7 +386,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-01-18 21:03:08" itemprop="dateModified" datetime="2020-01-18T21:03:08+08:00">2020-01-18</time>
+                <time title="修改时间：2020-09-08 16:42:36" itemprop="dateModified" datetime="2020-09-08T16:42:36+08:00">2020-09-08</time>
               
             
           </span>
@@ -419,7 +419,7 @@
       
 
       
-        <p><img src="https://s2.ax1x.com/2020/01/18/19SfY9.md.png" alt=""></p>
+        <p><img src="https://s2.ax1x.com/2020/01/18/19SfY9.md.png" alt></p>
 <a id="more"></a>
 <p>0202年，我开始学习<strong>TypeScript</strong>,本文基于官方示例及网友资料提炼而成，文中含有不少官方示例，但绝非简单地复制粘贴，所有示例均经反复验证或个人提炼，旨在帮助你更好的掌握<strong>TypeScript</strong>，学习的过程中，最大的感受就是<strong>TypeScript</strong>超强且繁琐的类型判断系统会让你感觉十分难受，至少对于我来说是如此，总之万事开头难，只能坚持下去才有收获！</p>
 <h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><blockquote>
@@ -460,7 +460,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回never的函数必须存在无法达到的终点</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">error</span>(<span class="params">message:string</span>):<span class="title">never</span> </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(message)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 推断的返回值类型为never</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fail</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> err(<span class="string">'failed'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回never的函数必须存在无法达到的终点</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">infiniteLoop</span>(<span class="params"></span>): <span class="title">never</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">//死循环</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>any</p>
 <blockquote>
-<p><code>any</code>类型就像它本身代表的含义一样，在我看来，即是允许任何类型的赋值</p>
+<p><code>any</code>类型就像它本身代表的含义一样，即是允许任何类型的赋值</p>
 </blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a:any = <span class="number">4</span></span><br><span class="line">a = <span class="string">'hello'</span> </span><br><span class="line">a = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//整个不同类型数据</span></span><br><span class="line"><span class="keyword">let</span> list:any[] = [<span class="number">1</span>,<span class="literal">true</span>,<span class="string">'hello'</span>]</span><br></pre></td></tr></table></figure>
 <p>void</p>
@@ -582,7 +582,7 @@
 <p>先前我们提过，接口能够描述JavaScript里丰富的类型。 因为JavaScript其动态灵活的特点，有时你会希望一个对象可以同时具有上面提到的多种类型</p>
 </blockquote>
 <p>我们希望一个接口可以同时描述函数和对象使用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">interface Counter &#123;</span><br><span class="line">    (start: number): string <span class="comment">//函数 返回字符串类型</span></span><br><span class="line">    interval: number <span class="comment">//属性 数字类型</span></span><br><span class="line">    reset(): <span class="keyword">void</span> <span class="comment">//属性 无返回值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCounter</span>(<span class="params"></span>): <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> counter = <span class="xml"><span class="tag">&lt;<span class="name">Counter</span>&gt;</span>function (start: number) &#123; &#125;;</span></span><br><span class="line"><span class="xml">    counter.interval = 123;</span></span><br><span class="line"><span class="xml">    counter.reset = function () &#123; &#125;;</span></span><br><span class="line"><span class="xml">    return counter;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">let c = getCounter();</span></span><br><span class="line"><span class="xml">c(10);</span></span><br><span class="line"><span class="xml">c.reset();</span></span><br><span class="line"><span class="xml">c.interval = 5.0;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">interface Counter &#123;</span><br><span class="line">    (start: number): string <span class="comment">//函数 返回字符串类型</span></span><br><span class="line">    interval: number <span class="comment">//属性 数字类型</span></span><br><span class="line">    reset(): <span class="keyword">void</span> <span class="comment">//属性 无返回值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCounter</span>(<span class="params"></span>): <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> counter = <span class="xml"><span class="tag">&lt;<span class="name">Counter</span>&gt;</span>function (start: number) &#123; &#125;;</span></span><br><span class="line"><span class="xml">    counter.interval = 123;</span></span><br><span class="line"><span class="xml">    counter.reset = function () &#123; &#125;;</span></span><br><span class="line"><span class="xml">    return counter;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="xml">let c = getCounter();</span></span><br><span class="line"><span class="xml">c(10);</span></span><br><span class="line"><span class="xml">c.reset();</span></span><br><span class="line"><span class="xml">c.interval = 5.0;</span></span><br></pre></td></tr></table></figure>
 <p><strong>接口继承类</strong></p>
 <blockquote>
 <p>当接口继承了一个类类型时，它会继承类的成员但不包括其实现。 就好像接口声明了所有类中存在的成员，但并没有提供具体实现一样 </p>
@@ -620,7 +620,7 @@
 <p>“TypeScript支持通过getters/setters来截取对对象成员的访问。 它能帮助你有效的控制对对象成员的访问” </p>
 <p>这一点，于ES6一致</p>
 </blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>  </span>&#123;</span><br><span class="line">    private _fullName: string</span><br><span class="line">    get fullName():string &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._fullName</span><br><span class="line">    &#125;</span><br><span class="line">    set fullName(name:string) &#123;</span><br><span class="line">        <span class="keyword">if</span>(name&amp;&amp;name==<span class="string">'choo'</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>._fullName = name</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.error(<span class="string">'Error: Unauthorized update of employee'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> employee =  <span class="keyword">new</span> Employee()</span><br><span class="line">employee.fullName = <span class="string">'choo'</span></span><br><span class="line"><span class="built_in">console</span>.log(employee.fullName)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>  </span>&#123;</span><br><span class="line">    private _fullName: string</span><br><span class="line">    <span class="keyword">get</span> fullName():string &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._fullName</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span> fullName(name:string) &#123;</span><br><span class="line">        <span class="keyword">if</span>(name&amp;&amp;name==<span class="string">'choo'</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>._fullName = name</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.error(<span class="string">'Error: Unauthorized update of employee'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> employee =  <span class="keyword">new</span> Employee()</span><br><span class="line">employee.fullName = <span class="string">'choo'</span></span><br><span class="line"><span class="built_in">console</span>.log(employee.fullName)</span><br></pre></td></tr></table></figure>
 <p>这里发现一个报错，存取器需要定义目标再ES5之上</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accessors are only available when targeting ECMAScript 5 and higher</span><br></pre></td></tr></table></figure>
 <p>使用es5以上的编译目标方可通过</p>
@@ -845,7 +845,7 @@
 
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">罗锦旭</p>
               <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
@@ -858,7 +858,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -900,7 +900,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -955,7 +957,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -967,7 +969,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

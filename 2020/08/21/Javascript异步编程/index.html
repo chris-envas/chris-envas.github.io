@@ -15,7 +15,7 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -115,7 +115,7 @@
 <meta property="og:site_name" content="锦衣无涯">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://s1.ax1x.com/2020/08/22/daTCqK.png">
-<meta property="og:updated_time" content="2020-08-22T09:29:01.966Z">
+<meta property="og:updated_time" content="2020-09-21T05:37:01.255Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聊聊JavaScript的异步编程">
 <meta name="twitter:image" content="https://s1.ax1x.com/2020/08/22/daTCqK.png">
@@ -179,7 +179,7 @@
 
 <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 <link rel="stylesheet" href="/music/APlayer.min.css">
 <div id="aplayer"></div>
 <script type="text/javascript" src="/music/APlayer.min.js"></script>
@@ -193,7 +193,7 @@
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
@@ -322,20 +322,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/21/Javascript异步编程/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="罗锦旭">
       <meta itemprop="description" content="记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="锦衣无涯">
     </span>
 
@@ -386,7 +386,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-22 17:29:01" itemprop="dateModified" datetime="2020-08-22T17:29:01+08:00">2020-08-22</time>
+                <time title="修改时间：2020-09-21 13:37:01" itemprop="dateModified" datetime="2020-09-21T13:37:01+08:00">2020-09-21</time>
               
             
           </span>
@@ -426,7 +426,8 @@
 <p>而异步模式就如同去肯德基点餐，你点完餐，服务员会跟你说，拿好牌子，找个地方坐下，食物做好了就会通知你来拿，而不用排队等候，严格规定必须上一位顾客完成就餐了，才能轮到你吃，换而言之，异步会将任务进行分解，而不必等待任务完成，可以转而执行其他的任务，等到任务完成，便会回过头，执行相应的处理，也就是说异步任务不存在<strong>阻塞</strong></p>
 <p>而JavaScript是一门单线程脚本语言，它是如何完成异步编程的工作的呢？</p>
 <p>首先要明确JavaScript单线程指的是在浏览器中负责解释和执行JavaScript的线程只有一个，负责该线程的线程被称之为JS引擎线程，其中最为人所知的就是：<strong>V8 (JavaScript引擎)</strong></p>
-<p>但是浏览器的工作可是由多个线程相互合作完成的噢，实际上JavaScript的异步编程也是依赖于其他线程的帮忙，来完成异步任务的调度分配工作的哦，让我们先来了解一下，浏览器的主要线程有哪些：</p>
+<p>我们常常说JavaScript是异步语言，但是ECMAScript里并没有关于异步的规范，JavaScript的异步更多是依靠runtime（浏览器/Node.js等环境）的帮助实现的，这并非JavaScript语言本身的能力，而是runtime内部提供的其他线程来实现</p>
+<p>以浏览器为例子，让我们先来了解一下，浏览器内部的主要线程有哪些：</p>
 <ul>
 <li>JS引擎线程</li>
 <li>事件触发线程</li>
@@ -491,7 +492,7 @@
 <p>输出结果为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">golabl start</span><br><span class="line">global end</span><br><span class="line">promise1 !</span><br><span class="line">promise2 !</span><br><span class="line">setTimeout1 !</span><br></pre></td></tr></table></figure>
 <p>根据输出结果，可以知道，Promise的回调函数先于setTimeout的回调函数被执行，可以得到一个信息，那就是二者的回调任务队列执行顺序：<strong>微任务  &gt; 宏任务</strong></p>
-<p>这时因为<strong>微任务总是在本轮任务执行结束后，并在下一个任务开始执行之前被全部取出执行</strong></p>
+<p>这是因为<strong>微任务总是在本轮任务执行结束后，并在下一个任务开始执行之前被全部取出执行</strong></p>
 <h3 id="Generator异步方案、Async-Await-语法糖"><a href="#Generator异步方案、Async-Await-语法糖" class="headerlink" title="Generator异步方案、Async/Await 语法糖"></a>Generator异步方案、Async/Await 语法糖</h3><blockquote>
 <p>在Node.js 10+以上的版本，使用的V8引擎是真正的原生支持了协程，而在较低版本中，则是以语法糖的形式实现，因此不建议使用，相比callbacks效率更低</p>
 </blockquote>
@@ -546,8 +547,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/16/【数据结构】从0到1掌握基础数据结构/" rel="next" title="【数据结构】从0到1掌握基础数据结构">
-                <i class="fa fa-chevron-left"></i> 【数据结构】从0到1掌握基础数据结构
+              <a href="/2020/07/16/【数据结构】从0到1掌握基础数据结构/" rel="next" title="前端算法与数据结构(包含真题演练)">
+                <i class="fa fa-chevron-left"></i> 前端算法与数据结构(包含真题演练)
               </a>
             
           </div>
@@ -615,7 +616,7 @@
 
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">罗锦旭</p>
               <p class="site-description motion-element" itemprop="description">记录学习过程是琐碎且费力的，但知识的留存会比以往更为长久</p>
@@ -628,7 +629,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -670,7 +671,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -725,7 +728,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -737,7 +740,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 
